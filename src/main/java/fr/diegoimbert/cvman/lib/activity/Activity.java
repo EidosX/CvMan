@@ -5,6 +5,8 @@ import org.hibernate.validator.constraints.URL;
 import fr.diegoimbert.cvman.lib.cv.CV;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -36,6 +38,7 @@ public class Activity {
 
   @Basic
   @NotNull
+  @Enumerated(EnumType.STRING)
   private Activity.Type type;
 
   @Basic
