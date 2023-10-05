@@ -1,7 +1,4 @@
-package fr.diegoimbert.cvman.lib.user;
-
-import java.util.Date;
-import java.util.List;
+package fr.diegoimbert.cvman.lib.activity;
 
 import org.hibernate.validator.constraints.URL;
 
@@ -11,57 +8,50 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "appUser")
+@Table(name = "activity")
 @NoArgsConstructor
 @Data
-public class User {
+public class Activity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Basic
-  @NotBlank
-  @Size(min = 2, max = 20)
-  private String firstName;
-
-  @Basic
-  @NotBlank
-  @Size(min = 2, max = 20)
-  private String lastName;
-
-  @Basic
-  @NotBlank
-  @Email
-  private String email;
+  @ManyToOne
+  @JoinColumn
+  @NotNull
+  private CV cv;
 
   @Basic
   @NotNull
-  @URL
-  private String website;
+  private int year;
 
   @Basic
   @NotNull
-  private Date birthday;
+  private Activity.Type type;
+
+  @Basic
+  @NotBlank
+  private String title;
 
   @Basic
   @NotNull
   private String description;
 
   @Basic
-  @NotBlank
-  private String hashedPassword;
+  @NotNull
+  @URL
+  private String website;
 
-  @OneToMany
-  private List<CV> cvs;
+  public static enum Type {
+    PROFESSIONAL_EXPERIENCE, TRAINING, PROJECT, OTHER
+  }
 }
