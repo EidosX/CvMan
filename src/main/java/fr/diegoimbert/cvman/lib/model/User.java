@@ -7,6 +7,8 @@ import org.hibernate.validator.constraints.URL;
 
 import jakarta.persistence.Basic;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -61,6 +63,15 @@ public class User {
   @NotBlank
   private String hashedPassword;
 
+  @Basic
+  @NotBlank
+  @Enumerated(EnumType.STRING)
+  private User.Role role = User.Role.VISITOR;
+
   @OneToMany
   private List<CV> cvs;
+
+  public static enum Role {
+    VISITOR
+  };
 }
