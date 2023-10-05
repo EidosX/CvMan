@@ -9,6 +9,7 @@ import jakarta.persistence.Basic;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -22,6 +23,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString.Exclude;
 
 @Entity
 @Table(name = "appUser")
@@ -58,10 +60,12 @@ public class User {
 
   @Basic
   @NotNull
+  @Exclude
   private String description;
 
   @Basic
   @NotBlank
+  @Exclude
   private String hashedPassword;
 
   @Basic
@@ -69,7 +73,8 @@ public class User {
   @Enumerated(EnumType.STRING)
   private User.Role role = User.Role.VISITOR;
 
-  @OneToMany
+  @OneToMany(fetch = FetchType.LAZY)
+  @Exclude
   private List<CV> cvs;
 
   public static enum Role {
