@@ -1,9 +1,7 @@
-package fr.diegoimbert.cvman.lib.cv;
+package fr.diegoimbert.cvman.lib.model;
 
 import java.util.List;
 
-import fr.diegoimbert.cvman.lib.activity.Activity;
-import fr.diegoimbert.cvman.lib.user.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

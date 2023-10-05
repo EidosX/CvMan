@@ -1,4 +1,4 @@
-package fr.diegoimbert.cvman.lib.user.dao;
+package fr.diegoimbert.cvman.lib.dao;
 
 import java.util.List;
 
@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import fr.diegoimbert.cvman.lib.user.User;
+import fr.diegoimbert.cvman.lib.model.User;
 
 @Repository
 @Transactional

@@ -1,8 +1,7 @@
-package fr.diegoimbert.cvman.lib.activity;
+package fr.diegoimbert.cvman.lib.model;
 
 import org.hibernate.validator.constraints.URL;
 
-import fr.diegoimbert.cvman.lib.cv.CV;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

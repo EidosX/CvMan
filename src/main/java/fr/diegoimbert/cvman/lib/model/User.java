@@ -1,11 +1,10 @@
-package fr.diegoimbert.cvman.lib.user;
+package fr.diegoimbert.cvman.lib.model;
 
 import java.util.Date;
 import java.util.List;
 
 import org.hibernate.validator.constraints.URL;
 
-import fr.diegoimbert.cvman.lib.cv.CV;
 import jakarta.persistence.Basic;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
