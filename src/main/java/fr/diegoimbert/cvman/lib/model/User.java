@@ -19,12 +19,14 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "appUser")
 @NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class User {
   @Id
@@ -47,7 +49,6 @@ public class User {
   private String email;
 
   @Basic
-  @NotNull
   @URL
   private String website;
 
@@ -64,7 +65,7 @@ public class User {
   private String hashedPassword;
 
   @Basic
-  @NotBlank
+  @NotNull
   @Enumerated(EnumType.STRING)
   private User.Role role = User.Role.VISITOR;
 

@@ -2,6 +2,8 @@ package fr.diegoimbert.cvman;
 
 import jakarta.annotation.PostConstruct;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,22 +12,30 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.stereotype.Component;
 
 import fr.diegoimbert.cvman.lib.dao.UserRepository;
+import fr.diegoimbert.cvman.lib.model.User;
 
 @EnableWebSecurity
 @Component
 @Configuration
 public class SpringSecurity {
   @Autowired
-  UserRepository userRepo;
+  UserRepository userRepository;
+
+  @Autowired
+  PasswordEncoder passwordEncoder;
 
   @PostConstruct
   public void init() {
+    var rootUser = new User(
+        null, "Root", "One", "rootone@email.fr",
+        null, new Date(), "", passwordEncoder.encode("root"),
+        User.Role.VISITOR, null);
+    userRepository.save(rootUser);
   }
 
   @Bean
@@ -38,7 +48,6 @@ public class SpringSecurity {
             .anyRequest().authenticated())
         .formLogin((form) -> form.permitAll())
         .logout((logout) -> logout.permitAll()).build();
-
   }
 
   @Autowired
@@ -48,12 +57,7 @@ public class SpringSecurity {
   public DaoAuthenticationProvider authProvider() {
     DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
     authProvider.setUserDetailsService(userDetailsService);
-    authProvider.setPasswordEncoder(passwordEncoder());
+    authProvider.setPasswordEncoder(passwordEncoder);
     return authProvider;
-  }
-
-  @Bean
-  public PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
   }
 }
