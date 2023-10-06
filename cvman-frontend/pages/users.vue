@@ -15,6 +15,8 @@
           <VListItem
             v-for="(u, i) in users"
             link
+            v-on:click="selectUser(u)"
+            :active="selectedUser.status == 'ok' && selectedUser.data.id == u.id"
             :key="i"
             :title="u.firstName + u.lastName"
             :subtitle="u.shortDescription"
@@ -23,14 +25,20 @@
           ></VListItem>
         </VList>
       </VCol>
-      <VCard style="flex: 1; padding: 1.6rem 2rem; max-height: 36.6rem; overflow: scroll">
-        <h2 style="padding-bottom: 1rem" class="text-h4">Diego Imbert</h2>
+      <VProgressCircular
+        indeterminate
+        v-if="selectedUser.status == 'loading'"
+        style="margin: auto"
+      />
+      <VCard
+        v-if="selectedUser.status == 'ok'"
+        style="flex: 1; padding: 1.6rem 2rem; max-height: 36.6rem; overflow: scroll"
+      >
+        <h2 style="padding-bottom: 1rem" class="text-h4">
+          {{ selectedUser.data.firstName }} {{ selectedUser.data.lastName }}
+        </h2>
         <p>
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nesciunt, asperiores
-          facere illum atque nam minima dolorum ducimus laborum possimus quis aliquam
-          tenetur nemo fugiat ipsum, ratione consequatur, nostrum quam fugit? Enim harum
-          obcaecati laborum ut eius. Nostrum dolorum eaque, laborum sequi soluta unde quas
-          ipsam laudantium, rem culpa, ad pariatur?
+          {{ selectedUser.data.description }}
         </p>
         <h3 style="padding: 1rem 0">Liste des CVs</h3>
         <VExpansionPanels>
@@ -48,10 +56,19 @@
 <script lang="ts" setup>
 import { useMyFetch } from "@/lib/useMyFetch"
 import { pageableSchema } from "@/lib/pageable"
-import { userListOutSchema, UserListOut } from "@/lib/model/user/UserScalar"
+import {
+  userListOutSchema,
+  UserListOut,
+  userDetailsOutSchema,
+  UserDetailsOut
+} from "@/lib/model/user/UserScalar"
 
 let users = ref<UserListOut>([])
 let currentPage = 0
+let selectedUser = ref<
+  { status: "ok"; data: UserDetailsOut } | { status: "loading" } | { status: "none" }
+>({ status: "none" })
+
 async function fetchNextPage() {
   const { data } = await useMyFetch("api/user/list", {
     params: { pageNumber: currentPage },
@@ -60,5 +77,18 @@ async function fetchNextPage() {
   users.value.push(...data.value.content)
   console.log(users)
 }
+
+async function selectUser({ id }: { id: number }) {
+  if (selectedUser.value.status == "ok" && selectedUser.value.data.id == id) {
+    selectedUser.value = { status: "none" }
+    return
+  }
+  selectedUser.value = { status: "loading" }
+  const { data } = await useMyFetch(`api/user/details/${id}`, {
+    schema: userDetailsOutSchema
+  })
+  selectedUser.value = { status: "ok", data: data.value }
+}
+
 fetchNextPage()
 </script>
