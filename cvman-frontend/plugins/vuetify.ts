@@ -7,7 +7,10 @@ export default defineNuxtPlugin(nuxtApp => {
   const vuetify = createVuetify({
     ssr: true,
     components,
-    directives
+    directives,
+    icons: {
+      defaultSet: "mdi"
+    }
   })
 
   nuxtApp.vueApp.use(vuetify)
