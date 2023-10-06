@@ -9,5 +9,10 @@ export default defineNuxtConfig({
     define: {
       "process.env.DEBUG": false
     }
+  },
+  nitro: {
+    routeRules: {
+      "/api/**": { proxy: "http://localhost:8080/api/**" }
+    }
   }
 })

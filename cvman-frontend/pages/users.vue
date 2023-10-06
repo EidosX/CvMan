@@ -11,7 +11,7 @@
           clearable
           style="max-height: 4rem"
         />
-        <VList lines="two" style="max-height: 32rem">
+        <VList lines="two" height="30rem">
           <VListItem
             v-for="i in 10"
             link
@@ -44,3 +44,13 @@
     </VRow>
   </VContainer>
 </template>
+
+<script lang="ts" setup>
+import { useMyFetch } from "@/composables/useMyFetch"
+let users = []
+let currentPage = 0
+const fetchedUsers = await useMyFetch("api/user/list", {
+  params: { pageNumber: currentPage }
+})
+console.log("USERS", fetchedUsers.data)
+</script>
