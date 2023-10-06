@@ -33,7 +33,10 @@ public class SpringSecurity {
   public void init() {
     var rootUser = new User(
         null, "Root", "One", "rootone@email.fr",
-        null, new Date(), "", passwordEncoder.encode("root"),
+        null, new Date(),
+        "I am the root user. I am nothing special," +
+            "except I am the first ever user of this website",
+        passwordEncoder.encode("root"),
         User.Role.VISITOR, null);
     userRepository.save(rootUser);
   }

@@ -7,7 +7,7 @@ export async function useMyFetch<T, ErrorT = FetchError>(
   { schema, ...opts }: { schema: ZodType<T> } & Parameters<typeof useFetch<T, ErrorT>>[1]
 ): Promise<AsyncData<T, ErrorT>> {
   const result = await useFetch<T, ErrorT>(request, {
-    baseURL: "http://localhost:8080/",
+    baseURL: "http://localhost:3000/",
     ...opts
   })
   return {

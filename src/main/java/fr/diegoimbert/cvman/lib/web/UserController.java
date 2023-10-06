@@ -4,8 +4,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import fr.diegoimbert.cvman.lib.dao.UserRepository;
-import fr.diegoimbert.cvman.lib.model.User;
+import fr.diegoimbert.cvman.lib.dto.UserListDTO;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -18,9 +19,12 @@ public class UserController {
   @Autowired
   private UserRepository userRepository;
 
+  @Autowired
+  private ModelMapper modelMapper;
+
   @GetMapping("/list")
-  public Page<User> list(@RequestParam int pageNumber) {
+  public Page<UserListDTO> list(@RequestParam int pageNumber) {
     var page = userRepository.findAll(PageRequest.of(pageNumber, 20));
-    return page;
+    return page.map(u -> modelMapper.map(u, UserListDTO.class));
   }
 }

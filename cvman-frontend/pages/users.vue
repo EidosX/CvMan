@@ -13,11 +13,11 @@
         />
         <VList lines="two" height="30rem">
           <VListItem
-            v-for="i in 10"
+            v-for="(u, i) in users"
             link
             :key="i"
-            :title="'Item ' + i"
-            subtitle="Lorem ipsum dolor sit amet consectetur adipisicing elit"
+            :title="u.firstName + u.lastName"
+            :subtitle="u.shortDescription"
             :prepend-avatar="`https://randomuser.me/api/portraits/men/${i % 70}.jpg`"
             style="padding: 1rem 0.8rem"
           ></VListItem>
@@ -46,11 +46,19 @@
 </template>
 
 <script lang="ts" setup>
-import { useMyFetch } from "@/composables/useMyFetch"
-let users = []
+import { useMyFetch } from "@/lib/useMyFetch"
+import { pageableSchema } from "@/lib/pageable"
+import { userListOutSchema, UserListOut } from "@/lib/model/user/UserScalar"
+
+let users = ref<UserListOut>([])
 let currentPage = 0
-const fetchedUsers = await useMyFetch("api/user/list", {
-  params: { pageNumber: currentPage }
-})
-console.log("USERS", fetchedUsers.data)
+async function fetchNextPage() {
+  const { data } = await useMyFetch("api/user/list", {
+    params: { pageNumber: currentPage },
+    schema: pageableSchema(userListOutSchema)
+  })
+  users.value.push(...data.value.content)
+  console.log(users)
+}
+fetchNextPage()
 </script>
