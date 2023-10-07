@@ -51,20 +51,20 @@ class TestModel {
 	public void testCV() {
 		var user = createDiegoUser();
 		ur.save(user);
-		cr.save(new CV(null, user, null));
+		cr.save(new CV(null, "CV", user, null));
 	}
 
 	@Test
 	public void testActivity() {
 		var user = ur.save(createDiegoUser());
-		var cv = cr.save(new CV(null, user, null));
+		var cv = cr.save(new CV(null, "CV", user, null));
 		ar.save(new Activity(null, cv, 2023, Type.PROFESSIONAL_EXPERIENCE,
 				"Stage Kanso", "Stage en web fullstack", "http://kanso.dev"));
 	}
 
 	private User createDiegoUser() {
 		try {
-			return new User(null, "Diego", "Imbert", "dm@eidos.cc", "https://eidos.cc",
+			return new User(null, "Diego", "Imbert", null, "dm@eidos.cc", "https://eidos.cc",
 					new SimpleDateFormat("dd/MM/yyyy").parse("10/10/2002"), "A User",
 					passwordEncoder.encode("password123"), Role.VISITOR, null);
 		} catch (ParseException e) {

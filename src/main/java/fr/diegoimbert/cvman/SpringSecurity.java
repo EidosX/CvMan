@@ -32,7 +32,7 @@ public class SpringSecurity {
   @PostConstruct
   public void init() {
     var rootUser = new User(
-        null, "Root", "One", "rootone@email.fr",
+        null, "Root", "One", null, "rootone@email.fr",
         null, new Date(),
         "I am the root user. I am nothing special," +
             "except I am the first ever user of this website",
@@ -46,6 +46,7 @@ public class SpringSecurity {
     auth.authenticationProvider(authProvider());
 
     return http
+        .httpBasic(basic -> basic.disable())
         .authorizeHttpRequests((requests) -> requests
             .requestMatchers("/", "/api/**").permitAll()
             .anyRequest().authenticated())

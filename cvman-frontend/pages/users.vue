@@ -18,20 +18,23 @@
             v-on:click="selectUser(u)"
             :active="selectedUser.status == 'ok' && selectedUser.data.id == u.id"
             :key="i"
-            :title="u.firstName + u.lastName"
+            :title="`${u.firstName} ${u.lastName}`"
             :subtitle="u.shortDescription"
-            :prepend-avatar="`https://randomuser.me/api/portraits/men/${i % 70}.jpg`"
+            :prepend-avatar="
+              u.avatar || `https://randomuser.me/api/portraits/men/${i % 70}.jpg`
+            "
             style="padding: 1rem 0.8rem"
           ></VListItem>
         </VList>
       </VCol>
       <VProgressCircular
-        indeterminate
         v-if="selectedUser.status == 'loading'"
+        indeterminate
         style="margin: auto"
       />
       <VCard
         v-if="selectedUser.status == 'ok'"
+        :key="selectedUser.data.id"
         style="flex: 1; padding: 1.6rem 2rem; max-height: 36.6rem; overflow: scroll"
       >
         <h2 style="padding-bottom: 1rem" class="text-h4">
@@ -40,14 +43,29 @@
         <p>
           {{ selectedUser.data.description }}
         </p>
-        <h3 style="padding: 1rem 0">Liste des CVs</h3>
-        <VExpansionPanels>
-          <VExpansionPanel
-            v-for="i in 10"
-            title="Title"
-            text="Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi, ratione debitis quis est labore voluptatibus! Eaque cupiditate minima"
-          />
-        </VExpansionPanels>
+        <template v-if="selectedUser.data.cvs.length">
+          <h3 style="padding: 1rem 0">Liste des CVs</h3>
+          <VExpansionPanels>
+            <VExpansionPanel v-for="cv in selectedUser.data.cvs" :title="cv.name">
+              <VExpansionPanelText v-if="!cv.activities.length">
+                <p style="color: grey">Aucune activité dans ce CV...</p>
+              </VExpansionPanelText>
+              <VExpansionPanelText v-for="a in cv.activities">
+                <p>
+                  <span style="font-weight: bold">{{ a.title }}</span>
+                  <span style="color: grey"> ({{ a.year }})</span>
+                </p>
+                <p style="color: chocolate; font-style: italic">
+                  {{ formatActivityType(a.type) }}
+                </p>
+                <p style="color: grey">{{ a.description }}</p>
+              </VExpansionPanelText>
+            </VExpansionPanel>
+          </VExpansionPanels>
+        </template>
+        <template v-else>
+          <h3 style="padding: 1rem 0" class="text-button">Aucun CV pour l'instant...</h3>
+        </template>
       </VCard>
     </VRow>
   </VContainer>
@@ -62,11 +80,14 @@ import {
   userDetailsOutSchema,
   UserDetailsOut
 } from "@/lib/model/user/UserScalar"
+import { formatActivityType } from "@/lib/model/activity/activityScalar"
 
 let users = ref<UserListOut>([])
 let currentPage = 0
 let selectedUser = ref<
-  { status: "ok"; data: UserDetailsOut } | { status: "loading" } | { status: "none" }
+  | { status: "ok"; data: UserDetailsOut }
+  | { status: "loading"; data: { id: number } }
+  | { status: "none" }
 >({ status: "none" })
 
 async function fetchNextPage() {
@@ -75,7 +96,7 @@ async function fetchNextPage() {
     schema: pageableSchema(userListOutSchema)
   })
   users.value.push(...data.value.content)
-  console.log(users)
+  currentPage += 1
 }
 
 async function selectUser({ id }: { id: number }) {
@@ -83,11 +104,14 @@ async function selectUser({ id }: { id: number }) {
     selectedUser.value = { status: "none" }
     return
   }
-  selectedUser.value = { status: "loading" }
+  selectedUser.value = { status: "loading", data: { id } }
+
   const { data } = await useMyFetch(`api/user/details/${id}`, {
     schema: userDetailsOutSchema
   })
-  selectedUser.value = { status: "ok", data: data.value }
+  // We check for asynchronicity issues
+  if (selectedUser.value.data.id == id)
+    selectedUser.value = { status: "ok", data: data.value }
 }
 
 fetchNextPage()

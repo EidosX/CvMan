@@ -19,6 +19,7 @@ public class UserDTO {
     private Long id;
     private String firstName;
     private String lastName;
+    private String avatar;
     @JsonIgnore
     private String description;
 
@@ -37,6 +38,7 @@ public class UserDTO {
     private Long id;
     private String firstName;
     private String lastName;
+    private String avatar;
     private String description;
     private String website;
     private String email;

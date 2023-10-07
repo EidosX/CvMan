@@ -2,6 +2,8 @@ package fr.diegoimbert.cvman.lib.model;
 
 import org.hibernate.validator.constraints.URL;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Basic;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -31,6 +33,7 @@ public class Activity {
   @ManyToOne
   @JoinColumn
   @NotNull
+  @JsonIgnore
   private CV cv;
 
   @Basic
@@ -51,7 +54,6 @@ public class Activity {
   private String description;
 
   @Basic
-  @NotNull
   @URL
   private String website;
 

@@ -46,6 +46,10 @@ public class User {
   private String lastName;
 
   @Basic
+  @URL
+  private String avatar;
+
+  @Basic
   @NotBlank
   @Email
   private String email;
@@ -73,7 +77,7 @@ public class User {
   @Enumerated(EnumType.STRING)
   private User.Role role = User.Role.VISITOR;
 
-  @OneToMany(fetch = FetchType.LAZY)
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
   @Exclude
   private List<CV> cvs;
 
