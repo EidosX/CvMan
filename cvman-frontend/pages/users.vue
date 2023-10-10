@@ -44,8 +44,7 @@
           {{ selectedUser.data.description }}
         </p>
         <template v-if="selectedUser.data.cvs.length">
-          <h3 style="padding: 1rem 0">Liste des CVs</h3>
-          <VExpansionPanels>
+          <VExpansionPanels style="padding: 1rem 0 0 0">
             <VExpansionPanel v-for="cv in selectedUser.data.cvs" :title="cv.name">
               <VExpansionPanelText v-if="!cv.activities.length">
                 <p style="color: grey">Aucune activité dans ce CV...</p>
