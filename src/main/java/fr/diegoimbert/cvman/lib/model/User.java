@@ -15,7 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -26,7 +26,9 @@ import lombok.NoArgsConstructor;
 import lombok.ToString.Exclude;
 
 @Entity
-@Table(name = "appUser")
+@Table(name = "appUser", uniqueConstraints = {
+    @UniqueConstraint(columnNames = { "email" }),
+    @UniqueConstraint(columnNames = { "username" }) })
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -34,6 +36,11 @@ public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
+  @Basic
+  @NotBlank
+  @Size(min = 2, max = 20)
+  private String username;
 
   @Basic
   @NotBlank

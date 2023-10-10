@@ -36,6 +36,7 @@ public class UserDTO {
   @NoArgsConstructor
   public static class DetailsOut {
     private Long id;
+    private String username;
     private String firstName;
     private String lastName;
     private String avatar;

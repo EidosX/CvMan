@@ -3,7 +3,9 @@ package fr.diegoimbert.cvman;
 import java.util.Collections;
 import java.util.Random;
 import java.util.stream.IntStream;
+import java.util.ArrayList;
 
+import org.hsqldb.lib.HashSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -39,7 +41,18 @@ public class Populate {
 
   @PostConstruct
   public void init() {
-    var users = IntStream.range(0, 10).mapToObj(this::randomUser).toList();
+    var usersWithDuplicates = IntStream.range(0, 10).mapToObj(this::randomUser).toList();
+    // Remove duplicate emails and usernames
+    var users = new ArrayList<User>();
+    var seenEmails = new HashSet<String>();
+    var seenUsernames = new HashSet<String>();
+    for (var u : usersWithDuplicates) {
+      if (seenEmails.contains(u.getEmail()) || seenUsernames.contains(u.getUsername()))
+        continue;
+      seenEmails.add(u.getEmail());
+      seenUsernames.add(u.getUsername());
+      users.add(u);
+    }
     ur.saveAll(users);
 
     var cvs = users.stream()
@@ -56,7 +69,8 @@ public class Populate {
   }
 
   private User randomUser(int i) {
-    return new User(null, faker.name().firstName(), faker.name().lastName(),
+    return new User(null, faker.name().username(),
+        faker.name().firstName(), faker.name().lastName(),
         "https://randomuser.me/api/portraits/"
             + (faker.random().nextBoolean() ? "men/" : "women/")
             + i % 70 + ".jpg",
