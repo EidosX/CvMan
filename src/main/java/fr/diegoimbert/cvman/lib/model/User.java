@@ -27,8 +27,7 @@ import lombok.ToString.Exclude;
 
 @Entity
 @Table(name = "appUser", uniqueConstraints = {
-    @UniqueConstraint(columnNames = { "email" }),
-    @UniqueConstraint(columnNames = { "username" }) })
+    @UniqueConstraint(columnNames = { "email" }) })
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -36,11 +35,6 @@ public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
-  @Basic
-  @NotBlank
-  @Size(min = 2, max = 20)
-  private String username;
 
   @Basic
   @NotBlank

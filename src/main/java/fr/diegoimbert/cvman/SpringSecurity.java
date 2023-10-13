@@ -47,11 +47,12 @@ public class SpringSecurity {
 
     return http
         .httpBasic(basic -> basic.disable())
-        .authorizeHttpRequests((requests) -> requests
-            .requestMatchers("/", "/api/**").permitAll()
-            .anyRequest().authenticated())
-        .formLogin((form) -> form.permitAll())
-        .logout((logout) -> logout.permitAll()).build();
+        // .authorizeHttpRequests((requests) -> requests
+        // .requestMatchers("/", "/api/**").permitAll()
+        // .anyRequest().authenticated())
+        // .formLogin((form) -> form.permitAll())
+        // .logout((logout) -> logout.permitAll())
+        .build();
   }
 
   @Autowired

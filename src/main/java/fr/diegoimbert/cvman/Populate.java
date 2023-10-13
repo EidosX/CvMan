@@ -42,15 +42,13 @@ public class Populate {
   @PostConstruct
   public void init() {
     var usersWithDuplicates = IntStream.range(0, 10).mapToObj(this::randomUser).toList();
-    // Remove duplicate emails and usernames
+    // Remove duplicate emails
     var users = new ArrayList<User>();
     var seenEmails = new HashSet<String>();
-    var seenUsernames = new HashSet<String>();
     for (var u : usersWithDuplicates) {
-      if (seenEmails.contains(u.getEmail()) || seenUsernames.contains(u.getUsername()))
+      if (seenEmails.contains(u.getEmail()))
         continue;
       seenEmails.add(u.getEmail());
-      seenUsernames.add(u.getUsername());
       users.add(u);
     }
     ur.saveAll(users);
@@ -69,7 +67,7 @@ public class Populate {
   }
 
   private User randomUser(int i) {
-    return new User(null, faker.name().username(),
+    return new User(null,
         faker.name().firstName(), faker.name().lastName(),
         "https://randomuser.me/api/portraits/"
             + (faker.random().nextBoolean() ? "men/" : "women/")
