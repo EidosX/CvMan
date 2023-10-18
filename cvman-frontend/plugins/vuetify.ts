@@ -6,7 +6,7 @@ import * as labsComponents from "vuetify/labs/components"
 export default defineNuxtPlugin(nuxtApp => {
   const vuetify = createVuetify({
     ssr: true,
-    components: { ...components, labsComponents },
+    components: { ...components, ...labsComponents },
     directives,
     icons: {
       defaultSet: "mdi"

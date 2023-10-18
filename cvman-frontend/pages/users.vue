@@ -11,7 +11,12 @@
           clearable
           style="max-height: 4rem"
         />
-        <VList lines="two" height="30rem">
+        <VInfiniteScroll
+          :height="520"
+          :items="users"
+          :onLoad="fetchNextPage"
+          empty-text="Tous les utilisateurs ont été chargés"
+        >
           <VListItem
             v-for="(u, i) in users"
             link
@@ -25,7 +30,7 @@
             "
             style="padding: 1rem 0.8rem"
           ></VListItem>
-        </VList>
+        </VInfiniteScroll>
       </VCol>
       <VProgressCircular
         v-if="selectedUser.status == 'loading'"
@@ -89,13 +94,23 @@ let selectedUser = ref<
   | { status: "none" }
 >({ status: "none" })
 
-async function fetchNextPage() {
-  const { data } = await useMyFetch("api/user/list", {
-    params: { pageNumber: currentPage },
-    schema: pageableSchema(userListOutSchema)
-  })
-  users.value.push(...data.value.content)
-  currentPage += 1
+async function fetchNextPage({
+  done
+}: {
+  done: (status: "ok" | "error" | "empty") => void
+}) {
+  try {
+    const { data } = await useMyFetch("api/user/list", {
+      params: { pageNumber: currentPage },
+      schema: pageableSchema(userListOutSchema)
+    })
+    if (data.value.empty) return done("empty")
+    users.value.push(...data.value.content)
+    currentPage += 1
+    return done("ok")
+  } catch {
+    return done("error")
+  }
 }
 
 async function selectUser({ id }: { id: number }) {
@@ -112,6 +127,4 @@ async function selectUser({ id }: { id: number }) {
   if (selectedUser.value.data.id == id)
     selectedUser.value = { status: "ok", data: data.value }
 }
-
-fetchNextPage()
 </script>

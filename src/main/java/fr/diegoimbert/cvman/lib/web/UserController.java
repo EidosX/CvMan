@@ -25,7 +25,7 @@ public class UserController {
 
   @GetMapping("/list")
   public Page<UserDTO.ListOut> list(@RequestParam int pageNumber) {
-    var page = userRepository.findAll(PageRequest.of(pageNumber, 20));
+    var page = userRepository.findAll(PageRequest.of(pageNumber, 4));
     return page.map(u -> modelMapper.map(u, UserDTO.ListOut.class));
   }
 

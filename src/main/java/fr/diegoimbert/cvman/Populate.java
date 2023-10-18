@@ -41,7 +41,7 @@ public class Populate {
 
   @PostConstruct
   public void init() {
-    var usersWithDuplicates = IntStream.range(0, 10).mapToObj(this::randomUser).toList();
+    var usersWithDuplicates = IntStream.range(0, 25).mapToObj(this::randomUser).toList();
     // Remove duplicate emails
     var users = new ArrayList<User>();
     var seenEmails = new HashSet<String>();
