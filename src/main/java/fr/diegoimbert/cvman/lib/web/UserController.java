@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import fr.diegoimbert.cvman.lib.dao.UserRepository;
 import fr.diegoimbert.cvman.lib.dto.UserDTO;
 
+import java.util.Optional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,8 +25,11 @@ public class UserController {
   private ModelMapper modelMapper;
 
   @GetMapping("/list")
-  public Page<UserDTO.ListOut> list(@RequestParam int pageNumber) {
-    var page = userRepository.findAll(PageRequest.of(pageNumber, 4));
+  public Page<UserDTO.ListOut> list(
+      @RequestParam int pageNumber, @RequestParam Optional<String> searchBar) {
+    var page = userRepository.findAll(
+        PageRequest.of(pageNumber, 10),
+        "%" + searchBar.orElse("") + "%");
     return page.map(u -> modelMapper.map(u, UserDTO.ListOut.class));
   }
 

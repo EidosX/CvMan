@@ -10,12 +10,14 @@
           clear-icon="mdi-close"
           clearable
           style="max-height: 4rem"
+          v-model="userSearchBar"
+          @input="onSearchBarChange"
         />
         <VInfiniteScroll
           :height="520"
           :items="users"
           :onLoad="fetchNextPage"
-          empty-text="Tous les utilisateurs ont été chargés"
+          empty-text="Fin de la liste"
         >
           <VListItem
             v-for="(u, i) in users"
@@ -86,6 +88,9 @@ import {
 } from "@/lib/model/user/UserScalar"
 import { formatActivityType } from "@/lib/model/activity/activityScalar"
 
+let userSearchBar = ""
+const onSearchBarChange = () => clearPage().then(() => fetchNextPage())
+
 let users = ref<UserListOut>([])
 let currentPage = 0
 let selectedUser = ref<
@@ -94,22 +99,28 @@ let selectedUser = ref<
   | { status: "none" }
 >({ status: "none" })
 
+async function clearPage() {
+  users.value = []
+  currentPage = 0
+}
+
 async function fetchNextPage({
   done
 }: {
-  done: (status: "ok" | "error" | "empty") => void
-}) {
+  done?: (status: "ok" | "error" | "empty") => void
+} = {}) {
+  console.log("FETCH")
   try {
     const { data } = await useMyFetch("api/user/list", {
-      params: { pageNumber: currentPage },
+      params: { pageNumber: currentPage, searchBar: userSearchBar },
       schema: pageableSchema(userListOutSchema)
     })
-    if (data.value.empty) return done("empty")
+    if (data.value.empty) return done?.("empty")
     users.value.push(...data.value.content)
     currentPage += 1
-    return done("ok")
+    return done?.("ok")
   } catch {
-    return done("error")
+    return done?.("error")
   }
 }
 
