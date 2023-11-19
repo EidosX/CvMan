@@ -5,6 +5,10 @@
  https://opensource.org/licenses/MIT
 -->
 
+<template type="text/x-template" id="counter-template">
+  <button @click="count++">You clicked {{ count }} times.</button>
+</template>
+
 <script>
   const { ref } = Vue
   app.component("Counter", {
@@ -12,9 +16,6 @@
       const count = ref(0)
       return { count }
     },
-    template: `
-      <button @click="count++">
-        You clicked me {{ count }} times.
-      </button>`
+    template: "#counter-template"
   })
 </script>
