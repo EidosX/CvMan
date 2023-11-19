@@ -6,7 +6,8 @@
 -->
 
 <script>
-  const Counter = {
+  const { ref } = Vue
+  app.component("Counter", {
     setup() {
       const count = ref(0)
       return { count }
@@ -15,5 +16,5 @@
       <button @click="count++">
         You clicked me {{ count }} times.
       </button>`
-  }
+  })
 </script>
