@@ -26,21 +26,36 @@
         <router-view></router-view>
       </v-app>
     </template>
+    <script>
+      const routes = []
+    </script>
+    <!-- Include page templates here -->
+    <%@ include file="/WEB-INF/pages/home.jsp"%>
   </body>
-  <script>
-    <%@ include file="/WEB-INF/router.js"%>
-    {}
-  </script>
   <script>
     const { createApp } = Vue
     const { createVuetify } = Vuetify
 
     const vuetify = createVuetify()
-    const { router } = AppRouter.create()
-
+    const router = VueRouter.createRouter({
+      history: VueRouter.createWebHashHistory(),
+      routes: [
+        ...routes,
+        {
+          path: "/:pathMatch(.*)*",
+          component: { template: "<div>Page Not Found</div>" }
+        }
+      ]
+    })
     const app = createApp({ template: "#app-template" })
     app.use(vuetify)
     app.use(router)
+  </script>
+
+  <!-- Include components here -->
+  <%@ include file="/WEB-INF/components/counter.jsp"%>
+
+  <script>
     app.mount("#app")
   </script>
 </html>
