@@ -9,23 +9,17 @@
       href="https://cdn.jsdelivr.net/npm/vuetify@3.3.22/dist/vuetify.min.css"
       rel="stylesheet"
     />
-    <script src="/framework/tailwind"></script>
+    <script src="/framework/tailwind.js"></script>
     <script src="/framework/vue.global.js"></script>
     <script src="/framework/vuetify.min.js"></script>
+    <script src="/framework/vue-router.global.js"></script>
     <title>CV Man</title>
   </head>
   <body>
     <div id="app"></div>
     <template type="text/x-template" id="app-template">
       <v-app>
-        <v-card
-          class="mx-auto"
-          width="400"
-          append-icon="mdi-human-greeting"
-          :title="'CV Man'"
-        >
-          <v-card-text> Vuetify is working </v-card-text>
-        </v-card>
+        <router-view></router-view>
       </v-app>
     </template>
   </body>
@@ -35,10 +29,21 @@
 
     const vuetify = createVuetify()
 
-    const app = createApp({
-      template: "#app-template"
+    const routes = [
+      { path: "/", component: { template: "<div>Home</div>" } },
+      { path: "/test/", component: { template: "<div>Test</div>" } },
+      { path: "/:pathMatch(.*)*", component: { template: "<div>Page Not Found</div>" } }
+    ]
+
+    const router = VueRouter.createRouter({
+      history: VueRouter.createWebHashHistory(),
+      routes
     })
-      .use(vuetify)
-      .mount("#app")
+
+    const app = createApp({ template: "#app-template" })
+    app.use(vuetify)
+    app.use(router)
+    app.mount("#app")
+    console.log(router.currentRoute)
   </script>
 </html>
