@@ -13,8 +13,9 @@ import org.springframework.web.servlet.ModelAndView;
 public class WebappController {
   @GetMapping("/app/**")
   public ModelAndView app() {
-    return new ModelAndView("/app-view.html");
+    return new ModelAndView("app.jsp");
   }
+
   @GetMapping("/")
   public String index() {
     return "redirect:/app";

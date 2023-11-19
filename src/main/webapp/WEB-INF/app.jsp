@@ -1,3 +1,10 @@
+<!--
+ Copyright (c) 2023 Diego Imbert
+ 
+ This software is released under the MIT License.
+ https://opensource.org/licenses/MIT
+-->
+
 <!DOCTYPE html>
 <html lang="fr">
   <head>
@@ -21,26 +28,19 @@
     </template>
   </body>
   <script>
+    <%@ include file="/WEB-INF/router.js"%>
+    {}
+  </script>
+  <script>
     const { createApp } = Vue
     const { createVuetify } = Vuetify
 
     const vuetify = createVuetify()
-
-    const routes = [
-      { path: "/", component: { template: "<div>Home</div>" } },
-      { path: "/test/", component: { template: "<div>Test</div>" } },
-      { path: "/:pathMatch(.*)*", component: { template: "<div>Page Not Found</div>" } }
-    ]
-
-    const router = VueRouter.createRouter({
-      history: VueRouter.createWebHashHistory(),
-      routes
-    })
+    const { router } = AppRouter.create()
 
     const app = createApp({ template: "#app-template" })
     app.use(vuetify)
     app.use(router)
     app.mount("#app")
-    console.log(router.currentRoute)
   </script>
 </html>
