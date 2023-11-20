@@ -44,6 +44,8 @@
   <!---->
   <%@ include file="/WEB-INF/components/counter.jsp"%>
   <!---->
+  <%@ include file="/WEB-INF/components/userList.jsp"%>
+  <!---->
   <%@ include file="/WEB-INF/pages/home.jsp"%>
   <!---->
   <%@ include file="/WEB-INF/pages/users.jsp"%>

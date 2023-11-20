@@ -7,7 +7,7 @@
 
 <template type="text/x-template" id="home-page-template">
   <h1>Welcome home, visitor!</h1>
-  <Counter></Counter>
+  <counter></counter>
 </template>
 
 <script>

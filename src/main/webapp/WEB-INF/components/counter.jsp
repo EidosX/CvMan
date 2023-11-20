@@ -12,7 +12,7 @@
 <script>
   {
     const { ref } = Vue
-    app.component("Counter", {
+    app.component("counter", {
       setup() {
         const count = ref(0)
         return { count }
