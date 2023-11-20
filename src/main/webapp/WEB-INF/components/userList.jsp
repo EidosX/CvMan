@@ -18,6 +18,7 @@
     <v-infinite-scroll
       :height="520"
       :items="users"
+      :key="searchbar"
       @load="fetchNextPage"
       empty-text="Fin de la liste"
     >
@@ -46,53 +47,51 @@
         selectedUserId: Number,
         onSelectUser: Function
       },
-      setup(props) {
-        const state = {
-          searchbar: ref(""),
-          currentPage: ref(0),
-          users: ref([]),
-          selectedUserId: toRef(props, "selectedUserId")
+      data(props) {
+        return {
+          searchbar: "",
+          currentPage: 0,
+          users: [],
+          _selectedUserId: toRef(props, "selectedUserId")
         }
+      },
+      methods: {
+        async fetchNextPage({ done } = {}) {
+          const searchbar = this.searchbar
+          const encodedSearchbar = encodeURIComponent(searchbar ?? "")
+          const currentPage = this.currentPage
+          try {
+            const res = await fetch(
+              "/api/user/list?pageNumber=" +
+                currentPage +
+                "&searchBar=" +
+                encodedSearchbar
+            ).then(x => x.json())
 
-        const methods = {
-          async fetchNextPage({ done }) {
-            const searchbar = state.searchbar.value
-            const encodedSearchbar = encodeURIComponent(searchbar)
-            const currentPage = state.currentPage.value
-            try {
-              const res = await fetch(
-                "/api/user/list?pageNumber=" +
-                  currentPage +
-                  "&searchBar=" +
-                  encodedSearchbar
-              ).then(x => x.json())
+            // Simulate delay
+            await new Promise(resolve => setTimeout(resolve, 500))
 
-              if (
-                searchbar === state.searchbar.value &&
-                currentPage === state.currentPage.value
-              ) {
-                state.currentPage.value += 1
-                state.users.value.push(...res.content)
-              }
-
-              if (res.last) return done("empty")
-              return done("ok")
-            } catch (e) {
-              console.log(e)
-              return done("error")
+            if (searchbar === this.searchbar && currentPage === this.currentPage) {
+              this.currentPage += 1
+              this.users.push(...res.content)
             }
-          },
-          async selectUser(u) {
-            props.onSelectUser?.(props.selectedUserId === u.id ? null : u)
+            if (res.last) return done?.("empty")
+            return done?.("ok")
+          } catch (e) {
+            console.log(e)
+            return done?.("error")
           }
+        },
+        async selectUser(u) {
+          this.onSelectUser?.(this.selectedUserId === u.id ? null : u)
         }
-
-        watch(state.searchbar, newSearchbar => {
-          state.currentPage.value = 0
-          state.users.value = []
-        })
-
-        return { ...state, ...methods }
+      },
+      watch: {
+        searchbar() {
+          this.currentPage = 0
+          this.users = []
+          this.fetchNextPage()
+        }
       },
       template: "#user-list-template"
     })
