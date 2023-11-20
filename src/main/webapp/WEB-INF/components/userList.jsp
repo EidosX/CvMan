@@ -40,9 +40,10 @@
 
 <script>
   {
-    const { ref, watch } = Vue
+    const { ref, watch, toRef } = Vue
     app.component("user-list", {
       props: {
+        selectedUserId: Number,
         onSelectUser: Function
       },
       setup(props) {
@@ -50,7 +51,7 @@
           searchbar: ref(""),
           currentPage: ref(0),
           users: ref([]),
-          selectedUserId: ref(null)
+          selectedUserId: toRef(props, "selectedUserId")
         }
 
         const methods = {
@@ -82,8 +83,7 @@
             }
           },
           async selectUser(u) {
-            state.selectedUserId.value = state.selectedUserId.value === u.id ? null : u.id
-            props.onSelectUser?.(u)
+            props.onSelectUser?.(props.selectedUserId === u.id ? null : u)
           }
         }
 
