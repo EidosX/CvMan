@@ -26,17 +26,29 @@
         <router-view></router-view>
       </v-app>
     </template>
-    <script>
-      const routes = []
-    </script>
-    <!-- Include page templates here -->
-    <%@ include file="/WEB-INF/pages/home.jsp"%>
   </body>
+
   <script>
+    const routes = []
     const { createApp } = Vue
     const { createVuetify } = Vuetify
 
+    const app = createApp({ template: "#app-template" })
+
     const vuetify = createVuetify()
+    app.use(vuetify)
+  </script>
+
+  <!-- Include files here -->
+
+  <!---->
+  <%@ include file="/WEB-INF/components/counter.jsp"%>
+  <!---->
+  <%@ include file="/WEB-INF/pages/home.jsp"%>
+  <!---->
+  <%@ include file="/WEB-INF/pages/users.jsp"%>
+
+  <script>
     const router = VueRouter.createRouter({
       history: VueRouter.createWebHashHistory(),
       routes: [
@@ -47,15 +59,8 @@
         }
       ]
     })
-    const app = createApp({ template: "#app-template" })
-    app.use(vuetify)
     app.use(router)
-  </script>
 
-  <!-- Include components here -->
-  <%@ include file="/WEB-INF/components/counter.jsp"%>
-
-  <script>
     app.mount("#app")
   </script>
 </html>

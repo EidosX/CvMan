@@ -10,12 +10,14 @@
 </template>
 
 <script>
-  const { ref } = Vue
-  app.component("Counter", {
-    setup() {
-      const count = ref(0)
-      return { count }
-    },
-    template: "#counter-template"
-  })
+  {
+    const { ref } = Vue
+    app.component("Counter", {
+      setup() {
+        const count = ref(0)
+        return { count }
+      },
+      template: "#counter-template"
+    })
+  }
 </script>

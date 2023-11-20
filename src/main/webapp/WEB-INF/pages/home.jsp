@@ -5,11 +5,21 @@
  https://opensource.org/licenses/MIT
 -->
 
-<script>
-  routes.push({ path: "/", component: { template: "#home-page" } })
-</script>
-
-<template type="text/x-template" id="home-page">
+<template type="text/x-template" id="home-page-template">
   <h1>Welcome home, visitor!</h1>
   <Counter></Counter>
 </template>
+
+<script>
+  {
+    const { ref } = Vue
+    const HomePage = {
+      setup: () => {
+        const count = ref(0)
+        return { count }
+      },
+      template: "#home-page-template"
+    }
+    routes.push({ path: "/", component: HomePage })
+  }
+</script>
