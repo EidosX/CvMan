@@ -30,6 +30,26 @@
         details: null,
         _selectedUserId: toRef(props, "selectedUserId")
       }),
+      methods: {
+        async fetchDetails() {
+          const fields = ["selectedUserId"]
+          const copy = copyFields(this, fields)
+
+          this.details = copy.selectedUserId
+            ? await fetch("/api/user/details/" + copy.selectedUserId).then(x => x.json())
+            : null
+          console.log(this.details)
+          if (!fieldsEquals(this, copy, fields)) return
+        }
+      },
+      watch: {
+        selectedUserId() {
+          this.fetchDetails()
+        }
+      },
+      created() {
+        this.fetchDetails()
+      },
       template: "#user-details-template"
     })
   }

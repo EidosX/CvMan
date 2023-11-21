@@ -14,7 +14,7 @@
   {
     const { ref } = Vue
     const HomePage = {
-      setup: () => {
+      setup() {
         const count = ref(0)
         return { count }
       },
