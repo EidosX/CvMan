@@ -29,13 +29,13 @@
           </div>
         </div>
         <div class="ml-auto">
-          <p class="text-sm flex gap-1 justify-end">
+          <p class="text-sm flex gap-1 justify-end" v-if="details.website">
             <a :href="details.website" class="text-blue-500">
               {{ details.website }}
             </a>
             <v-icon icon="mdi-web"></v-icon>
           </p>
-          <p class="text-sm flex gap-1 justify-end">
+          <p class="text-sm flex gap-1 justify-end" v-if="details.email">
             <a :href="'mailto:' + details.email" class="text-blue-500">
               {{ details.email }}
             </a>
