@@ -1,9 +1,8 @@
 package fr.diegoimbert.cvman.lib.dao;
 
-import java.util.LinkedList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -25,8 +24,7 @@ public class MyUserDetailsService implements UserDetailsService {
     User user = userRepository.findByEmail(email)
         .orElseThrow(() -> new UsernameNotFoundException("User '" + email + "' not found"));
 
-    var authorites = new LinkedList<GrantedAuthority>();
-    authorites.add(new SimpleGrantedAuthority(user.getRole().toString()));
+    var authorites = List.of(new SimpleGrantedAuthority(user.getRole().toString()));
 
     return org.springframework.security.core.userdetails.User
         .withUsername(email)
