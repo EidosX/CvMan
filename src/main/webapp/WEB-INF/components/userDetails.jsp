@@ -12,9 +12,11 @@
 -->
 
 <template type="text/x-template" id="user-details-template">
-  <span v-if="selectedUserId && details"> </span>
-  <span v-else-if="selectedUserId && !details"> </span>
-  <span v-else>Aucun utilisateur selectionn&eacute</span>
+  <span style="flex: 0 0 65%">
+    <span v-if="selectedUserId && details"> </span>
+    <span v-else-if="selectedUserId && !details"> </span>
+    <span v-else>Aucun utilisateur selectionn&eacute</span>
+  </span>
 </template>
 
 <script>

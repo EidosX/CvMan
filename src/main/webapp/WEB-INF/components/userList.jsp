@@ -6,7 +6,7 @@
 -->
 
 <template type="text/x-template" id="user-list-template">
-  <v-col style="max-width: 22rem">
+  <v-col>
     <v-text-field
       variant="filled"
       placeholder="Rechercher un utilisateur"
@@ -33,7 +33,7 @@
         :prepend-avatar="
             u.avatar || `https://randomuser.me/api/portraits/men/${i % 70}.jpg`
           "
-        style="padding: 1rem 0.8rem"
+        class="px-4 py-3"
       ></v-list-item>
     </v-infinite-scroll>
   </v-col>

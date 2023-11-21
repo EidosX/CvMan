@@ -6,7 +6,7 @@
 -->
 
 <template type="text/x-template" id="users-page-template">
-  <v-container style="padding-bottom: 2.5rem">
+  <v-container>
     <h1 class="text-h2 pt-4 pb-8">Liste des utilisateurs</h1>
     <v-row>
       <user-list
