@@ -6,7 +6,8 @@
 -->
 
 <template type="text/x-template" id="user-list-template">
-  <div class="flex flex-col grow p-3">
+  <div class="flex flex-col grow p-3 max-w-md">
+    <h1 class="text-h4 pt-2 pb-4 font-bold">Liste des utilisateurs</h1>
     <v-text-field
       variant="filled"
       placeholder="Rechercher un utilisateur"

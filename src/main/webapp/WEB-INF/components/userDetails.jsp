@@ -12,7 +12,7 @@
 -->
 
 <template type="text/x-template" id="user-details-template">
-  <v-card style="flex: 0 0 65%" class="px-8 py-6 overflow-y-auto">
+  <v-card style="flex: 1 0 65%" class="px-8 py-6 overflow-y-auto">
     <div v-if="selectedUserId && details">
       <div class="flex pb-4 gap-6 items-center">
         <v-avatar

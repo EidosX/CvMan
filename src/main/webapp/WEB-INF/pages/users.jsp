@@ -6,8 +6,7 @@
 -->
 
 <template type="text/x-template" id="users-page-template">
-  <v-container class="relative h-screen flex flex-col grow-0">
-    <h1 class="text-h2 pt-4 pb-8">Liste des utilisateurs</h1>
+  <div class="relative h-screen flex flex-col grow-0">
     <div class="flex flex-1 min-h-0 pb-4">
       <user-list
         :on-select-user="onSelectUser"
@@ -15,7 +14,7 @@
       ></user-list>
       <user-details :selected-user-id="selectedUserId"></user-details>
     </div>
-  </v-container>
+  </div>
 </template>
 
 <script>
