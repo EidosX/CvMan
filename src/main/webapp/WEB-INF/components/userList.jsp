@@ -8,9 +8,20 @@
 <template type="text/x-template" id="user-list-template">
   <div class="flex flex-col grow p-3 max-w-md">
     <h1 class="text-h4 pt-2 pb-4 font-bold">Liste des utilisateurs</h1>
+    <div class="flex align-center">
+      <p class="leading-0 text-slate-400 text-sm">Rechercher:</p>
+      <v-radio-group inline v-model="searchBy" hide-details="auto" class="text-sm">
+        <v-radio label="Utilisateur" value="user"></v-radio>
+        <v-radio label="CV" value="cv"></v-radio>
+        <v-radio label="Activit&eacute;" value="activity"></v-radio>
+      </v-radio-group>
+    </div>
     <v-text-field
       variant="filled"
-      placeholder="Rechercher un utilisateur"
+      :placeholder="searchBy == 'user'     ? 'Rechercher un utilisateur'
+                  : searchBy == 'cv'       ? 'Rechercher un CV'
+                  : searchBy == 'activity' ? 'Rechercher une activit&eacute;'
+                  : '???'"
       prepend-inner-icon="mdi-magnify"
       clear-icon="mdi-close"
       v-model="searchbar"
@@ -20,7 +31,7 @@
     ></v-text-field>
     <v-infinite-scroll
       :items="users"
-      :key="searchbar"
+      :key="searchBy + searchbar"
       @load="fetchNextPage"
       empty-text="Fin de la liste"
     >
@@ -51,11 +62,12 @@
         searchbar: "",
         currentPage: 0,
         users: [],
+        searchBy: "user",
         _selectedUserId: toRef(props, "selectedUserId")
       }),
       methods: {
         async fetchNextPage({ done } = {}) {
-          const fields = ["searchbar", "currentPage"]
+          const fields = ["searchbar", "currentPage", "searchBy"]
           const copy = copyFields(this, fields)
           const encodedSearchbar = encodeURIComponent(copy.searchbar ?? "")
           try {
@@ -63,7 +75,9 @@
               "/api/user/list?pageNumber=" +
                 copy.currentPage +
                 "&searchBar=" +
-                encodedSearchbar
+                encodedSearchbar +
+                "&searchBy=" +
+                copy.searchBy
             ).then(x => x.json())
 
             // Simulate delay
@@ -82,13 +96,19 @@
         },
         async selectUser(u) {
           this.onSelectUser?.(this.selectedUserId === u.id ? null : u)
+        },
+        reset() {
+          this.currentPage = 0
+          this.users = []
+          this.fetchNextPage()
         }
       },
       watch: {
         searchbar() {
-          this.currentPage = 0
-          this.users = []
-          this.fetchNextPage()
+          this.reset()
+        },
+        searchBy() {
+          this.reset()
         }
       },
       template: "#user-list-template"

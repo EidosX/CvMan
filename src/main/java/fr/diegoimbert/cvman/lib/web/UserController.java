@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fr.diegoimbert.cvman.lib.dao.UserRepository;
 import fr.diegoimbert.cvman.lib.dto.UserDTO;
+import fr.diegoimbert.cvman.lib.model.User;
 
 import java.util.Optional;
 import org.modelmapper.ModelMapper;
@@ -26,10 +27,19 @@ public class UserController {
 
   @GetMapping("/list")
   public Page<UserDTO.ListOut> list(
-      @RequestParam int pageNumber, @RequestParam Optional<String> searchBar) {
-    var page = userRepository.findAll(
-        PageRequest.of(pageNumber, 10),
-        "%" + searchBar.orElse("") + "%");
+      @RequestParam int pageNumber, @RequestParam Optional<String> searchBar, @RequestParam Optional<String> searchBy) {
+    var like = "%" + searchBar.orElse("") + "%";
+    var pr = PageRequest.of(pageNumber, 10);
+
+    Page<User> page;
+
+    if (searchBy.equals(Optional.of("cv"))) {
+      page = userRepository.findAllByCv(pr, like);
+    } else if (searchBy.equals(Optional.of("activity"))) {
+      page = userRepository.findAllByActivity(pr, like);
+    } else {
+      page = userRepository.findAllByFullName(pr, like);
+    }
     return page.map(u -> modelMapper.map(u, UserDTO.ListOut.class));
   }
 

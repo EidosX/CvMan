@@ -17,5 +17,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	Optional<User> findByEmail(String email);
 
 	@Query(value = "SELECT u FROM User u WHERE CONCAT(u.firstName, ' ', u.lastName) ILIKE :searchBar")
-	Page<User> findAll(Pageable pageable, String searchBar);
+	Page<User> findAllByFullName(Pageable pageable, String searchBar);
+
+	@Query(value = "SELECT u FROM User u WHERE EXISTS(SELECT id FROM CV c WHERE c.user.id = u.id AND c.name ILIKE :searchBar)")
+	Page<User> findAllByCv(Pageable pageable, String searchBar);
+
+	@Query(value = "SELECT u FROM User u WHERE EXISTS(SELECT id FROM Activity a WHERE a.cv.user.id = u.id AND a.title ILIKE :searchBar)")
+	Page<User> findAllByActivity(Pageable pageable, String searchBar);
 }
