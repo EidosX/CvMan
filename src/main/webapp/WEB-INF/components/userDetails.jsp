@@ -81,9 +81,8 @@
           // Simulate delay
           await new Promise(resolve => setTimeout(resolve, 500))
 
-          this.details = details
-
           if (!fieldsEquals(this, copy, fields)) return
+          this.details = details
         },
         formatActivityType
       },

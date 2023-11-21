@@ -72,8 +72,6 @@
 
             done?.(res.last ? "empty" : "ok")
 
-            // Do not try to change state if the data is no longer relevant
-            // e.g the data is ready but the searchbar changed meanwhile
             if (!fieldsEquals(copy, this, fields)) return
 
             this.currentPage += 1
