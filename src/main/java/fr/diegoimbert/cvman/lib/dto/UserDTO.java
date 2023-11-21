@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import fr.diegoimbert.cvman.lib.model.CV;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -43,6 +42,6 @@ public class UserDTO {
     private String website;
     private String email;
     private Date birthday;
-    private List<CV> cvs;
+    private List<CvDTO> cvs;
   }
 }
