@@ -43,7 +43,12 @@
         <h3 style="padding: 1rem 0" class="text-button">Aucun CV pour l'instant...</h3>
       </template>
     </div>
-    <div v-else-if="selectedUserId && !details"></div>
+    <div
+      v-else-if="selectedUserId && !details"
+      class="w-full h-full items-center justify-center flex"
+    >
+      <v-progress-circular indeterminate></v-progress-circular>
+    </div>
     <div v-else class="w-full h-full items-center justify-center flex">
       <p class="text-slate-400 text-2xl font-light">
         Aucun utilisateur selectionn&eacute
@@ -67,10 +72,17 @@
         async fetchDetails() {
           const fields = ["selectedUserId"]
           const copy = copyFields(this, fields)
+          this.details = null
 
-          this.details = copy.selectedUserId
+          const details = copy.selectedUserId
             ? await fetch("/api/user/details/" + copy.selectedUserId).then(x => x.json())
             : null
+
+          // Simulate delay
+          await new Promise(resolve => setTimeout(resolve, 500))
+
+          this.details = details
+
           if (!fieldsEquals(this, copy, fields)) return
         },
         formatActivityType
