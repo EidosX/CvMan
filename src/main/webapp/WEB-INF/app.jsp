@@ -46,6 +46,8 @@
   <!---->
   <%@ include file="/WEB-INF/components/userList.jsp"%>
   <!---->
+  <%@ include file="/WEB-INF/components/userDetails.jsp"%>
+  <!---->
   <%@ include file="/WEB-INF/pages/home.jsp"%>
   <!---->
   <%@ include file="/WEB-INF/pages/users.jsp"%>

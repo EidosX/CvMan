@@ -13,6 +13,7 @@
         :on-select-user="onSelectUser"
         :selected-user-id="selectedUserId"
       ></user-list>
+      <user-details :selected-user-id="selectedUserId"></user-details>
     </v-row>
   </v-container>
 </template>

@@ -47,14 +47,12 @@
         selectedUserId: Number,
         onSelectUser: Function
       },
-      data(props) {
-        return {
-          searchbar: "",
-          currentPage: 0,
-          users: [],
-          _selectedUserId: toRef(props, "selectedUserId")
-        }
-      },
+      data: props => ({
+        searchbar: "",
+        currentPage: 0,
+        users: [],
+        _selectedUserId: toRef(props, "selectedUserId")
+      }),
       methods: {
         async fetchNextPage({ done } = {}) {
           const searchbar = this.searchbar
