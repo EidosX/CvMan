@@ -31,9 +31,7 @@
         :key="i"
         :title="u.firstName + ' ' + u.lastName"
         :subtitle="u.shortDescription"
-        :prepend-avatar="
-            u.avatar || `https://randomuser.me/api/portraits/men/${i % 70}.jpg`
-          "
+        :prepend-avatar="u.avatar || 'https://gravatar.com/avatar'"
         class="px-4 py-3"
       ></v-list-item>
     </v-infinite-scroll>

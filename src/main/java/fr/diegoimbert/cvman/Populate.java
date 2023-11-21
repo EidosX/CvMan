@@ -74,7 +74,7 @@ public class Populate {
             + i % 70 + ".jpg",
         faker.internet().emailAddress(), "http://" + faker.internet().domainName(),
         faker.date().birthday(17, 68),
-        "I am a very happy and chill person! It will be a pleasure to work with you.",
+        "Je suis très sympathique, ca serait un plaisir de travailler avec vous!",
         passwordEncoder.encode(faker.internet().password()), Role.VISITOR, null);
   }
 

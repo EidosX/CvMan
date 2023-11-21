@@ -1,5 +1,8 @@
 package fr.diegoimbert.cvman.lib.dto;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -41,7 +44,14 @@ public class UserDTO {
     private String description;
     private String website;
     private String email;
+    @JsonIgnore
     private Date birthday;
     private List<CvDTO> cvs;
+
+    public int getAge() {
+      return Period.between(
+          LocalDate.ofInstant(birthday.toInstant(), ZoneId.systemDefault()),
+          LocalDate.now()).getYears();
+    }
   }
 }

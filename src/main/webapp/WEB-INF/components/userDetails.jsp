@@ -14,9 +14,35 @@
 <template type="text/x-template" id="user-details-template">
   <v-card style="flex: 0 0 65%" class="px-8 py-6 overflow-y-auto">
     <div v-if="selectedUserId && details">
-      <h2 style="padding-bottom: 1rem" class="text-h4">
-        {{ details.firstName }} {{ details.lastName }}
-      </h2>
+      <div class="flex pb-4 gap-6 items-center">
+        <v-avatar
+          :image="details.avatar || 'https://gravatar.com/avatar'"
+          size="90"
+        ></v-avatar>
+        <div>
+          <h2 style="padding-bottom: 1rem leading-0" class="text-h4">
+            {{ details.firstName }} {{ details.lastName }}
+          </h2>
+          <div class="flex gap-2">
+            <v-icon icon="mdi-party-popper"></v-icon>
+            <p>{{ details.age }} ans</p>
+          </div>
+        </div>
+        <div class="ml-auto">
+          <p class="text-sm flex gap-1 justify-end">
+            <a :href="details.website" class="text-blue-500">
+              {{ details.website }}
+            </a>
+            <v-icon icon="mdi-web"></v-icon>
+          </p>
+          <p class="text-sm flex gap-1 justify-end">
+            <a :href="'mailto:' + details.email" class="text-blue-500">
+              {{ details.email }}
+            </a>
+            <v-icon icon="mdi-email"></v-icon>
+          </p>
+        </div>
+      </div>
       <p>
         {{ details.description }}
       </p>
