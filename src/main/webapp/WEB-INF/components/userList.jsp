@@ -55,13 +55,13 @@
       }),
       methods: {
         async fetchNextPage({ done } = {}) {
-          const searchbar = this.searchbar
-          const encodedSearchbar = encodeURIComponent(searchbar ?? "")
-          const currentPage = this.currentPage
+          const fields = ["searchbar", "currentPage"]
+          const copy = copyFields(this, fields)
+          const encodedSearchbar = encodeURIComponent(copy.searchbar ?? "")
           try {
             const res = await fetch(
               "/api/user/list?pageNumber=" +
-                currentPage +
+                copy.currentPage +
                 "&searchBar=" +
                 encodedSearchbar
             ).then(x => x.json())
@@ -69,15 +69,17 @@
             // Simulate delay
             await new Promise(resolve => setTimeout(resolve, 500))
 
-            if (searchbar === this.searchbar && currentPage === this.currentPage) {
-              this.currentPage += 1
-              this.users.push(...res.content)
-            }
-            if (res.last) return done?.("empty")
-            return done?.("ok")
+            done?.(res.last ? "empty" : "ok")
+
+            // Do not try to change state if the data is no longer relevant
+            // e.g the data is ready but the searchbar changed meanwhile
+            if (!fieldsEquals(copy, this, fields)) return
+
+            this.currentPage += 1
+            this.users.push(...res.content)
           } catch (e) {
             console.log(e)
-            return done?.("error")
+            done?.("error")
           }
         },
         async selectUser(u) {
