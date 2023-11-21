@@ -12,11 +12,44 @@
 -->
 
 <template type="text/x-template" id="user-details-template">
-  <span style="flex: 0 0 65%">
-    <span v-if="selectedUserId && details"> </span>
-    <span v-else-if="selectedUserId && !details"> </span>
-    <span v-else>Aucun utilisateur selectionn&eacute</span>
-  </span>
+  <v-card style="flex: 0 0 65%" class="px-8 py-6 overflow-y-auto">
+    <div v-if="selectedUserId && details">
+      <h2 style="padding-bottom: 1rem" class="text-h4">
+        {{ details.firstName }} {{ details.lastName }}
+      </h2>
+      <p>
+        {{ details.description }}
+      </p>
+      <template v-if="details.cvs.length">
+        <v-expansion-panels style="padding: 1rem 0 0 0">
+          <v-expansion-panel v-for="cv in details.cvs" :title="cv.name">
+            <v-expansion-panel-text v-if="!cv.activities.length">
+              <p style="color: grey">Aucune activit&eacute dans ce CV...</p>
+            </v-expansion-panel-text>
+            <v-expansion-panel-text v-for="a in cv.activities">
+              <p>
+                <span style="font-weight: bold">{{ a.title }}</span>
+                <span style="color: grey"> ({{ a.year }})</span>
+              </p>
+              <p style="color: chocolate; font-style: italic">
+                {{ formatActivityType(a.type) }}
+              </p>
+              <p style="color: grey">{{ a.description }}</p>
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </v-expansion-panels>
+      </template>
+      <template v-else>
+        <h3 style="padding: 1rem 0" class="text-button">Aucun CV pour l'instant...</h3>
+      </template>
+    </div>
+    <div v-else-if="selectedUserId && !details"></div>
+    <div v-else class="w-full h-full items-center justify-center flex">
+      <p class="text-slate-400 text-2xl font-light">
+        Aucun utilisateur selectionn&eacute
+      </p>
+    </div>
+  </v-card>
 </template>
 
 <script>
@@ -38,9 +71,9 @@
           this.details = copy.selectedUserId
             ? await fetch("/api/user/details/" + copy.selectedUserId).then(x => x.json())
             : null
-          console.log(this.details)
           if (!fieldsEquals(this, copy, fields)) return
-        }
+        },
+        formatActivityType
       },
       watch: {
         selectedUserId() {

@@ -6,7 +6,7 @@
 -->
 
 <template type="text/x-template" id="user-list-template">
-  <v-col>
+  <div class="flex flex-col grow p-3">
     <v-text-field
       variant="filled"
       placeholder="Rechercher un utilisateur"
@@ -14,9 +14,10 @@
       clear-icon="mdi-close"
       v-model="searchbar"
       clearable
+      hide-details="auto"
+      class="grow-0"
     ></v-text-field>
     <v-infinite-scroll
-      :height="520"
       :items="users"
       :key="searchbar"
       @load="fetchNextPage"
@@ -36,7 +37,7 @@
         class="px-4 py-3"
       ></v-list-item>
     </v-infinite-scroll>
-  </v-col>
+  </div>
 </template>
 
 <script>
