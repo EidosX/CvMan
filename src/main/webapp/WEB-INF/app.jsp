@@ -29,14 +29,19 @@
   </body>
 
   <script>
-    const routes = []
-    const { createApp } = Vue
-    const { createVuetify } = Vuetify
+    // Everything in this scope will be visible to all files
+    const { routes, app } = (function init() {
+      const routes = []
+      const { createApp } = Vue
+      const { createVuetify } = Vuetify
 
-    const app = createApp({ template: "#app-template" })
+      const app = createApp({ template: "#app-template" })
 
-    const vuetify = createVuetify()
-    app.use(vuetify)
+      const vuetify = createVuetify()
+      app.use(vuetify)
+
+      return { routes, app }
+    })()
   </script>
 
   <!-- Include files here -->
