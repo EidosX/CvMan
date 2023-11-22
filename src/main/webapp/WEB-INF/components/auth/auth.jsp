@@ -120,7 +120,7 @@
     const { ref } = Vue
     app.component("auth", {
       data: props => ({
-        overlay: true,
+        overlay: false,
         datePickerOverlay: false,
         mode: "login",
         showPassword: false,
@@ -141,6 +141,9 @@
         formattedBirthday: ({ birthday }) => birthday?.toLocaleDateString()
       },
       methods: {
+        open() {
+          this.overlay = true
+        },
         async login() {
           const { email, password } = this
           const res = await fetch("/api/auth/login", {

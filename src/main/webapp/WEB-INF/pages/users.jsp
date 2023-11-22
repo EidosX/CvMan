@@ -6,7 +6,7 @@
 -->
 
 <template type="text/x-template" id="users-page-template">
-  <div class="relative h-screen flex flex-col grow-0">
+  <div class="relative h-screen w-full flex flex-col grow-0">
     <div class="flex flex-1 min-h-0 pb-4">
       <user-list
         :on-select-user="onSelectUser"

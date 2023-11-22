@@ -23,8 +23,11 @@
     <div id="app"></div>
     <template type="text/x-template" id="app-template">
       <v-app>
-        <auth></auth>
-        <router-view></router-view>
+        <auth ref="auth"></auth>
+        <div class="flex w-full">
+          <navbar :on-open-auth="openAuth"></navbar>
+          <router-view></router-view>
+        </div>
       </v-app>
     </template>
   </body>
@@ -36,7 +39,14 @@
       const { createApp } = Vue
       const { createVuetify } = Vuetify
 
-      const app = createApp({ template: "#app-template" })
+      const app = createApp({
+        template: "#app-template",
+        methods: {
+          openAuth() {
+            this.$refs.auth.open()
+          }
+        }
+      })
 
       const vuetify = createVuetify()
       app.use(vuetify)
@@ -51,6 +61,8 @@
   <%@ include file="/WEB-INF/lib/util.jsp"%>
   <!---->
   <%@ include file="/WEB-INF/lib/activity.jsp"%>
+  <!---->
+  <%@ include file="/WEB-INF/components/navbar.jsp"%>
   <!---->
   <%@ include file="/WEB-INF/components/auth/auth.jsp"%>
   <!---->
