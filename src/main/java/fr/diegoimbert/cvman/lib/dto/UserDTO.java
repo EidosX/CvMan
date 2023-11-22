@@ -54,4 +54,16 @@ public class UserDTO {
           LocalDate.now()).getYears();
     }
   }
+
+  @Component
+  @Data
+  @NoArgsConstructor
+  public static class CreateIn {
+    private String email;
+    private String firstName;
+    private String lastName;
+    private Date birthday;
+    private String rawPassword;
+    private String hashedPassword = "";
+  }
 }

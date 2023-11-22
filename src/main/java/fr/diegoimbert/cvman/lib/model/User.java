@@ -66,7 +66,7 @@ public class User {
   @Basic
   @NotNull
   @Exclude
-  private String description;
+  private String description = "";
 
   @Basic
   @NotBlank
