@@ -23,6 +23,7 @@
     <div id="app"></div>
     <template type="text/x-template" id="app-template">
       <v-app>
+        <auth></auth>
         <router-view></router-view>
       </v-app>
     </template>
@@ -50,6 +51,8 @@
   <%@ include file="/WEB-INF/lib/util.jsp"%>
   <!---->
   <%@ include file="/WEB-INF/lib/activity.jsp"%>
+  <!---->
+  <%@ include file="/WEB-INF/components/auth/auth.jsp"%>
   <!---->
   <%@ include file="/WEB-INF/components/counter.jsp"%>
   <!---->
