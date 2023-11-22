@@ -151,6 +151,7 @@
           if (res.status !== 200) {
             // HANDLE ERRORS
             console.error(res)
+            console.error(await res.text())
             return
           }
           const token = await res.json()
@@ -166,6 +167,7 @@
           if (res.status !== 200) {
             // HANDLE ERRORS
             console.error(res)
+            console.error(await res.text())
             return
           }
         },

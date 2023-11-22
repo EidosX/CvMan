@@ -58,7 +58,7 @@ public class AuthController {
       return ResponseEntity.ok(loginRes);
 
     } catch (BadCredentialsException e) {
-      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid username or password");
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Mot de passe ou utilisateur invalide");
     } catch (Exception e) {
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
