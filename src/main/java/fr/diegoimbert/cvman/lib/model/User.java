@@ -83,6 +83,7 @@ public class User {
   private List<CV> cvs;
 
   public static enum Role {
-    VISITOR
+    VISITOR,
+    ADMIN,
   };
 }

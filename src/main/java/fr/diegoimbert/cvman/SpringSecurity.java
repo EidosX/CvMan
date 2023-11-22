@@ -7,13 +7,15 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
 
 import fr.diegoimbert.cvman.lib.dao.UserRepository;
@@ -27,42 +29,44 @@ public class SpringSecurity {
   UserRepository userRepository;
 
   @Autowired
+  UserDetailsService userDetailsService;
+
+  @Autowired
   PasswordEncoder passwordEncoder;
 
   @PostConstruct
   public void init() {
     var rootUser = new User(
-        null, "Root", "One", null, "rootone@email.fr",
+        null, "Root", "One", null, "root@eidos.cc",
         null, new Date(),
         "I am the root user. I am nothing special," +
             "except I am the first ever user of this website",
         passwordEncoder.encode("root"),
-        User.Role.VISITOR, null);
+        User.Role.ADMIN, null);
     userRepository.save(rootUser);
   }
 
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManagerBuilder auth) throws Exception {
-    auth.authenticationProvider(authProvider());
-
     return http
+        .csrf(c -> c.disable())
         .httpBasic(basic -> basic.disable())
         // .authorizeHttpRequests((requests) -> requests
-        // .requestMatchers("/", "/api/**").permitAll()
-        // .anyRequest().authenticated())
-        // .formLogin((form) -> form.permitAll())
-        // .logout((logout) -> logout.permitAll())
+        // .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST,
+        // "/api/auth/login")).permitAll()
+        // .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST,
+        // "/api/auth/signup")).permitAll()
+        // .requestMatchers(AntPathRequestMatcher.antMatcher("/api/**")).authenticated()
+        // .anyRequest().permitAll())
         .build();
   }
 
-  @Autowired
-  UserDetailsService userDetailsService;
-
   @Bean
-  public DaoAuthenticationProvider authProvider() {
-    DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-    authProvider.setUserDetailsService(userDetailsService);
-    authProvider.setPasswordEncoder(passwordEncoder);
-    return authProvider;
+  public AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder encoder)
+      throws Exception {
+    AuthenticationManagerBuilder authenticationManagerBuilder = http
+        .getSharedObject(AuthenticationManagerBuilder.class);
+    authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(encoder);
+    return authenticationManagerBuilder.build();
   }
 }

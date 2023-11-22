@@ -42,6 +42,7 @@
               label="Adresse email"
               prepend-inner-icon="mdi-email"
               variant="outlined"
+              v-model="email"
             ></v-text-field>
             <v-text-field
               :hint="mode == 'signup' ? 'Choisissez un mot de passe sécurisé'
@@ -52,6 +53,7 @@
               :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
               @click:append-inner="showPassword = !showPassword"
               variant="outlined"
+              v-model="password"
             ></v-text-field>
             <v-text-field
               v-if="mode == 'signup'"
@@ -62,9 +64,14 @@
               :append-inner-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
               @click:append-inner="showPassword = !showPassword"
               variant="outlined"
+              v-model="passwordConfirmation"
             ></v-text-field>
           </div>
-          <v-btn append-icon="$vuetify" class="bottom-6 absolute">
+          <v-btn
+            append-icon="$vuetify"
+            class="bottom-6 absolute"
+            @click="mode == 'login' ? login() : mode == 'signup' ? signup() : 0"
+          >
             <template v-if="mode == 'login'">Se connecter</template>
             <template v-if="mode == 'signup'">S'inscrire</template>
           </v-btn>
@@ -81,8 +88,23 @@
       data: props => ({
         overlay: true,
         mode: "login",
-        showPassword: false
+        showPassword: false,
+        email: "",
+        password: "",
+        passwordConfirmation: ""
       }),
+      methods: {
+        async login() {
+          const { email, password } = this
+          const res = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
+          }).then(x => x.json())
+          console.log(res)
+        },
+        async signup() {}
+      },
       template: "#auth-template"
     })
   }
