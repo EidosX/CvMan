@@ -24,6 +24,8 @@ public class AuthDTO {
     @NoArgsConstructor
     public static class Res {
       private String email;
+      private String firstName;
+      private String lastName;
       private String token;
     }
   }

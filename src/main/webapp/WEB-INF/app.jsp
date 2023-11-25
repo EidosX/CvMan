@@ -25,7 +25,11 @@
       <v-app>
         <auth ref="auth" :on-user="(u) => user = u"></auth>
         <div class="flex w-full">
-          <navbar :on-open-auth="openAuth"></navbar>
+          <navbar
+            :on-open-auth="openAuth"
+            :on-edit-user="() => {}"
+            :on-logout="() => user = null"
+          ></navbar>
           <router-view></router-view>
         </div>
       </v-app>
@@ -55,6 +59,7 @@
         }
       })
 
+      app.config.globalProperties.$user = userRef
       app.config.globalProperties.$fetch = function (uri, params = {}) {
         return fetch(uri, {
           ...params,

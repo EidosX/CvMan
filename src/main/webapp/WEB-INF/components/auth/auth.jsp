@@ -102,6 +102,7 @@
             ></v-text-field>
           </div>
           <v-btn
+            v-if="!waiting"
             append-icon="$vuetify"
             class="bottom-8 absolute"
             @click="mode == 'login' ? login() : mode == 'signup' ? signup() : 0"
@@ -109,10 +110,18 @@
             <template v-if="mode == 'login'">Se connecter</template>
             <template v-if="mode == 'signup'">S'inscrire</template>
           </v-btn>
+          <v-progress-circular
+            class="bottom-8 absolute"
+            v-if="waiting"
+            indeterminate
+          ></v-progress-circular>
         </div>
       </div>
     </v-card>
   </v-overlay>
+  <v-snackbar v-model="snackbarEnabled" :color="snackbarColor">
+    {{ snackbarText }}
+  </v-snackbar>
 </template>
 
 <script>
@@ -132,7 +141,11 @@
         lastName: "",
         birthday: null,
         password: "",
-        passwordConfirmation: ""
+        passwordConfirmation: "",
+        waiting: false,
+        snackbarText: "",
+        snackbarEnabled: false,
+        snackbarColor: "red"
       }),
       watch: {
         birthday() {
@@ -148,33 +161,57 @@
           this.overlay = true
         },
         async login() {
-          const { email, password } = this
-          const res = await this.$fetch("/api/auth/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password })
-          })
-          if (res.status !== 200) {
-            // HANDLE ERRORS
-            console.error(res)
-            console.error(await res.text())
-            return
+          try {
+            this.waiting = true
+            const { email, password } = this
+            const res = await this.$fetch("/api/auth/login", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email, password })
+            })
+            if (res.status !== 200) {
+              // HANDLE ERRORS
+              const text = await res.text()
+              console.error(res)
+              console.error(text)
+              this.snackbarText = text
+              this.snackbarColor = "red"
+              return
+            }
+            const { token, firstName, lastName } = await res.json()
+            this.onUser({ email, token, firstName, lastName })
+            this.overlay = false
+            this.snackbarText = "Bienvenue, " + firstName
+            this.snackbarColor = "green"
+          } finally {
+            this.waiting = false
+            this.snackbarEnabled = true
           }
-          const { token } = await res.json()
-          this.onUser({ email, token })
         },
         async signup() {
-          const { email, firstName, lastName, password: rawPassword, birthday } = this
-          const res = await this.$fetch("/api/auth/signup", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, firstName, lastName, rawPassword, birthday })
-          })
-          if (res.status !== 200) {
-            // HANDLE ERRORS
-            console.error(res)
-            console.error(await res.text())
-            return
+          try {
+            this.waiting = true
+            const { email, firstName, lastName, password: rawPassword, birthday } = this
+            const res = await this.$fetch("/api/auth/signup", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ email, firstName, lastName, rawPassword, birthday })
+            })
+            if (res.status !== 200) {
+              // HANDLE ERRORS
+              const text = await res.text()
+              console.error(res)
+              console.error(text)
+              this.snackbarText = text
+              this.snackbarColor = "red"
+              this.snackbarEnabled = true
+              return
+            }
+            this.snackbarText = "Le compte a bien ete cree"
+            this.snackbarColor = "success"
+            this.snackbarEnabled = true
+          } finally {
+            this.waiting = false
           }
         },
         allowedDates(date) {
