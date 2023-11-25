@@ -99,10 +99,10 @@
           const fields = ["selectedUserId"]
           const copy = copyFields(this, fields)
           this.details = null
-
-          const details = copy.selectedUserId
-            ? await fetch("/api/user/details/" + copy.selectedUserId).then(x => x.json())
+          const detailsRes = copy.selectedUserId
+            ? await this.$fetch("/api/user/details/" + copy.selectedUserId)
             : null
+          const details = detailsRes.status == 200 ? await detailsRes.json() : null
 
           // Simulate delay
           await new Promise(resolve => setTimeout(resolve, 500))

@@ -71,14 +71,19 @@
           const copy = copyFields(this, fields)
           const encodedSearchbar = encodeURIComponent(copy.searchbar ?? "")
           try {
-            const res = await fetch(
+            const res = await this.$fetch(
               "/api/user/list?pageNumber=" +
                 copy.currentPage +
                 "&searchBar=" +
                 encodedSearchbar +
                 "&searchBy=" +
                 copy.searchBy
-            ).then(x => x.json())
+            )
+            if (res.status !== 200) {
+              console.error(res)
+              return
+            }
+            const json = await res.json()
 
             // Simulate delay
             await new Promise(resolve => setTimeout(resolve, 500))
@@ -88,7 +93,7 @@
             if (!fieldsEquals(copy, this, fields)) return
 
             this.currentPage += 1
-            this.users.push(...res.content)
+            this.users.push(...json.content)
           } catch (e) {
             console.log(e)
             done?.("error")

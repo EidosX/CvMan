@@ -12,12 +12,15 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Component;
 
+import fr.diegoimbert.cvman.lib.auth.JwtAuthorizationFilter;
 import fr.diegoimbert.cvman.lib.dao.UserRepository;
 import fr.diegoimbert.cvman.lib.model.User;
 
@@ -33,6 +36,9 @@ public class SpringSecurity {
 
   @Autowired
   PasswordEncoder passwordEncoder;
+
+  @Autowired
+  JwtAuthorizationFilter jwtAuthorizationFilter;
 
   @PostConstruct
   public void init() {
@@ -51,13 +57,24 @@ public class SpringSecurity {
     return http
         .csrf(c -> c.disable())
         .httpBasic(basic -> basic.disable())
-        // .authorizeHttpRequests((requests) -> requests
-        // .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST,
-        // "/api/auth/login")).permitAll()
-        // .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST,
-        // "/api/auth/signup")).permitAll()
-        // .requestMatchers(AntPathRequestMatcher.antMatcher("/api/**")).authenticated()
-        // .anyRequest().permitAll())
+        .authorizeHttpRequests((requests) -> {
+          try {
+            requests
+                .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST,
+                    "/api/auth/login"))
+                .permitAll()
+                .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST,
+                    "/api/auth/signup"))
+                .permitAll()
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/**"))
+                .authenticated()
+                .anyRequest().permitAll();
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        })
+        .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
         .build();
   }
 

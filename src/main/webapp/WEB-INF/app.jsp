@@ -23,7 +23,7 @@
     <div id="app"></div>
     <template type="text/x-template" id="app-template">
       <v-app>
-        <auth ref="auth"></auth>
+        <auth ref="auth" :on-token="(t) => authToken = t"></auth>
         <div class="flex w-full">
           <navbar :on-open-auth="openAuth"></navbar>
           <router-view></router-view>
@@ -36,17 +36,33 @@
     // Everything in this scope will be visible to all files
     const { routes, app } = (function init() {
       const routes = []
-      const { createApp } = Vue
+      const { createApp, ref, watch } = Vue
       const { createVuetify } = Vuetify
 
+      const authTokenRef = ref(null)
       const app = createApp({
         template: "#app-template",
+        data: props => ({
+          authToken: authTokenRef
+        }),
         methods: {
           openAuth() {
             this.$refs.auth.open()
           }
         }
       })
+
+      app.config.globalProperties.$fetch = function (uri, params = {}) {
+        return fetch(uri, {
+          ...params,
+          headers: {
+            ...(authTokenRef.value && {
+              Authorization: "Bearer " + authTokenRef.value
+            }),
+            ...params.headers
+          }
+        })
+      }
 
       const vuetify = createVuetify()
       app.use(vuetify)

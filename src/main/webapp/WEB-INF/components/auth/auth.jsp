@@ -119,6 +119,9 @@
   {
     const { ref } = Vue
     app.component("auth", {
+      props: {
+        onToken: Function
+      },
       data: props => ({
         overlay: false,
         datePickerOverlay: false,
@@ -146,7 +149,7 @@
         },
         async login() {
           const { email, password } = this
-          const res = await fetch("/api/auth/login", {
+          const res = await this.$fetch("/api/auth/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password })
@@ -157,12 +160,12 @@
             console.error(await res.text())
             return
           }
-          const token = await res.json()
-          console.info(token)
+          const { token } = await res.json()
+          this.onToken(token)
         },
         async signup() {
           const { email, firstName, lastName, password: rawPassword, birthday } = this
-          const res = await fetch("/api/auth/signup", {
+          const res = await this.$fetch("/api/auth/signup", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, firstName, lastName, rawPassword, birthday })
