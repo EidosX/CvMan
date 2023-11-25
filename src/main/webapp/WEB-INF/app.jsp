@@ -23,7 +23,7 @@
     <div id="app"></div>
     <template type="text/x-template" id="app-template">
       <v-app>
-        <auth ref="auth" :on-token="(t) => authToken = t"></auth>
+        <auth ref="auth" :on-user="(u) => user = u"></auth>
         <div class="flex w-full">
           <navbar :on-open-auth="openAuth"></navbar>
           <router-view></router-view>
@@ -39,11 +39,14 @@
       const { createApp, ref, watch } = Vue
       const { createVuetify } = Vuetify
 
-      const authTokenRef = ref(null)
+      const userRef = ref(JSON.parse(localStorage.getItem("user")))
+      watch(userRef, user => {
+        localStorage.setItem("user", JSON.stringify(user))
+      })
       const app = createApp({
         template: "#app-template",
         data: props => ({
-          authToken: authTokenRef
+          user: userRef
         }),
         methods: {
           openAuth() {
@@ -56,8 +59,8 @@
         return fetch(uri, {
           ...params,
           headers: {
-            ...(authTokenRef.value && {
-              Authorization: "Bearer " + authTokenRef.value
+            ...(userRef.value?.token && {
+              Authorization: "Bearer " + userRef.value?.token
             }),
             ...params.headers
           }

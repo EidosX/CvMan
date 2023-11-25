@@ -120,7 +120,7 @@
     const { ref } = Vue
     app.component("auth", {
       props: {
-        onToken: Function
+        onUser: Function
       },
       data: props => ({
         overlay: false,
@@ -161,7 +161,7 @@
             return
           }
           const { token } = await res.json()
-          this.onToken(token)
+          this.onUser({ email, token })
         },
         async signup() {
           const { email, firstName, lastName, password: rawPassword, birthday } = this
