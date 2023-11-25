@@ -28,7 +28,7 @@
           <navbar
             :on-open-auth="openAuth"
             :on-edit-user="() => {}"
-            :on-logout="() => user = null"
+            :on-logout="() => { $router.push('/'); user = null; }"
           ></navbar>
           <router-view></router-view>
         </div>

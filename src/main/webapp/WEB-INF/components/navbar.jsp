@@ -40,23 +40,31 @@
         onLogout: Function,
         onEditUser: Function
       },
-      data: props => ({
-        active: "userlist"
-      }),
       computed: {
-        items: ({ $user, onOpenAuth }) => [
+        active: ({ $router }) => {
+          if ($router.currentRoute.value.path.startsWith("/users")) return "userlist"
+          return "home"
+        },
+        items: ({ $user, onOpenAuth, $router }) => [
           {
             id: "home",
             icon: "mdi-home",
             name: "Accueil",
-            onClick() {}
+            onClick() {
+              $router.push("/")
+            }
           },
-          {
-            id: "userlist",
-            icon: "mdi-file-account",
-            name: "Utilisateurs",
-            onClick() {}
-          },
+          ...(($user.value && [
+            {
+              id: "userlist",
+              icon: "mdi-file-account",
+              name: "Utilisateurs",
+              onClick() {
+                $router.push("/users")
+              }
+            }
+          ]) ||
+            []),
           {
             id: "account",
             icon: "mdi-account",
