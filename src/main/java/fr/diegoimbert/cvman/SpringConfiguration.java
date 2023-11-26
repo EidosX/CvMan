@@ -56,6 +56,13 @@ public class SpringConfiguration extends SpringBootServletInitializer implements
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
+		return new BCryptPasswordEncoder() {
+			@Override
+			public String encode(CharSequence rawPassword) {
+				if (rawPassword.length() < 8)
+					throw new RuntimeException("Mot de passe trop court");
+				return super.encode(rawPassword);
+			}
+		};
 	}
 }
