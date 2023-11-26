@@ -44,7 +44,6 @@ public class UserDTO {
     private String description;
     private String website;
     private String email;
-    @JsonIgnore
     private Date birthday;
     private List<CvDTO> cvs;
 
@@ -53,6 +52,27 @@ public class UserDTO {
           LocalDate.ofInstant(birthday.toInstant(), ZoneId.systemDefault()),
           LocalDate.now()).getYears();
     }
+  }
+
+  @Component
+  @Data
+  @NoArgsConstructor
+  public static class Edit {
+    private Long id;
+    private String firstName;
+    private String lastName;
+    private String avatar;
+    private String description;
+    private String website;
+    private String email;
+    private List<CvDTO> cvs;
+  }
+
+  @Component
+  @Data
+  @NoArgsConstructor
+  public static class EditPassword {
+    private String rawPassword;
   }
 
   @Component

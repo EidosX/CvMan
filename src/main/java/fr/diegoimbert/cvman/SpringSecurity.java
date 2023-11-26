@@ -47,7 +47,7 @@ public class SpringSecurity {
         null, new Date(),
         "I am the root user. I am nothing special," +
             "except I am the first ever user of this website",
-        passwordEncoder.encode("root"),
+        passwordEncoder.encode("rootroot"),
         User.Role.ADMIN, null);
     userRepository.save(rootUser);
   }
@@ -66,7 +66,7 @@ public class SpringSecurity {
                 .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST,
                     "/api/auth/signup"))
                 .permitAll()
-                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/user/**")).permitAll()
+                .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/user/**")).permitAll()
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/api/**")).authenticated().anyRequest().permitAll();
           } catch (Exception e) {
             e.printStackTrace();

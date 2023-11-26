@@ -6,8 +6,10 @@
 -->
 
 <template type="text/x-template" id="navbar-template">
+  <div class="shrink-0" :class="widthClass"></div>
   <div
-    class="w-28 shrink-0 bg-slate-950 h-screen text-white flex flex-col"
+    class="fixed bg-slate-950 h-screen text-white flex flex-col"
+    :class="widthClass"
     style="height: 100dvh"
   >
     <div
@@ -38,6 +40,9 @@
   {
     const { ref } = Vue
     app.component("navbar", {
+      data: props => ({
+        widthClass: "w-28"
+      }),
       props: {
         onOpenAuth: Function,
         onLogout: Function,
@@ -46,6 +51,7 @@
       computed: {
         active: ({ $router }) => {
           if ($router.currentRoute.value.path.startsWith("/users")) return "userlist"
+          if ($router.currentRoute.value.path.startsWith("/edit-user")) return "account"
           return "home"
         },
         items: ({ $user, onOpenAuth, $router }) => [

@@ -3,8 +3,11 @@ package fr.diegoimbert.cvman.lib.web;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import fr.diegoimbert.cvman.lib.dao.ActivityRepository;
+import fr.diegoimbert.cvman.lib.dao.CVRepository;
 import fr.diegoimbert.cvman.lib.dao.UserRepository;
 import fr.diegoimbert.cvman.lib.dto.UserDTO;
+import fr.diegoimbert.cvman.lib.model.CV;
 import fr.diegoimbert.cvman.lib.model.User;
 
 import java.util.Optional;
@@ -12,8 +15,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
@@ -21,13 +27,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class UserController {
   @Autowired
   private UserRepository userRepository;
+  @Autowired
+  private CVRepository cvRepository;
+  @Autowired
+  private ActivityRepository activityRepository;
 
   @Autowired
   private ModelMapper modelMapper;
 
+  @Autowired
+  private PasswordEncoder encoder;
+
   @GetMapping("/list")
   public Page<UserDTO.ListOut> list(
-      @RequestParam int pageNumber, @RequestParam Optional<String> searchBar, @RequestParam Optional<String> searchBy) {
+      @RequestParam int pageNumber, @RequestParam Optional<String> searchBar,
+      @RequestParam Optional<String> searchBy) {
     var like = "%" + searchBar.orElse("") + "%";
     var pr = PageRequest.of(pageNumber, 10);
 
@@ -47,5 +61,41 @@ public class UserController {
   public UserDTO.DetailsOut details(@PathVariable Long id) {
     var user = userRepository.findById(id).get();
     return modelMapper.map(user, UserDTO.DetailsOut.class);
+  }
+
+  @PostMapping("/edit-password/{id}")
+  public void editPassword(@PathVariable Long id, @RequestBody UserDTO.EditPassword dto) {
+    var user = userRepository.findById(id).get();
+    user.setHashedPassword(encoder.encode(dto.getRawPassword()));
+    userRepository.save(user);
+  }
+
+  @PostMapping("/edit")
+  public void edit(@RequestBody UserDTO.Edit dto) {
+    System.out.println(dto);
+    var user = userRepository.findById(dto.getId()).get();
+    if (dto.getAvatar() != null) {
+      user.setAvatar(dto.getAvatar());
+    }
+    if (dto.getDescription() != null) {
+      user.setDescription(dto.getDescription());
+    }
+    if (dto.getEmail() != null) {
+      user.setEmail(dto.getEmail());
+    }
+    if (dto.getFirstName() != null) {
+      user.setFirstName(dto.getFirstName());
+    }
+    if (dto.getLastName() != null) {
+      user.setLastName(dto.getLastName());
+    }
+    if (dto.getWebsite() != null) {
+      user.setWebsite(dto.getWebsite());
+    }
+    if (dto.getCvs() != null && !dto.getCvs().isEmpty()) {
+      var cvs = dto.getCvs().stream().map(c -> modelMapper.map(c, CV.class)).toList();
+      cvRepository.updateListFromUser(user, cvs, activityRepository);
+    }
+    userRepository.save(user);
   }
 }

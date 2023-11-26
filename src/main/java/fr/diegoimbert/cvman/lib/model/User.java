@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.validator.constraints.URL;
 
 import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -78,7 +79,7 @@ public class User {
   @Enumerated(EnumType.STRING)
   private User.Role role = User.Role.VISITOR;
 
-  @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REMOVE)
   @Exclude
   private List<CV> cvs;
 

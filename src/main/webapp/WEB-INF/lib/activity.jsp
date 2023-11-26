@@ -17,4 +17,5 @@
         return "Projet"
     }
   }
+  const allActivityTypes = ["TRAINING", "OTHER", "PROFESSIONAL_EXPERIENCE", "PROJECT"]
 </script>

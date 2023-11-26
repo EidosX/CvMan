@@ -5,6 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Basic;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -40,6 +41,6 @@ public class CV {
   @JsonIgnore
   private User user;
 
-  @OneToMany(fetch = FetchType.EAGER, mappedBy = "cv")
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "cv", cascade = CascadeType.REMOVE)
   private List<Activity> activities;
 }
