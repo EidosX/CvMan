@@ -60,11 +60,16 @@
         <h2 class="font-bold text-2xl pb-6">Liste des activit&eacute;s</h2>
         <div class="flex flex-col gap-8">
           <v-card v-for="a in selectedCv.activities">
-            <v-text-field
-              label="Titre de l'activit&eacute;"
-              v-model="a.title"
-              hide-details="auto"
-            ></v-text-field>
+            <div class="flex gap-3">
+              <v-text-field
+                label="Titre de l'activit&eacute;"
+                v-model="a.title"
+                hide-details="auto"
+              ></v-text-field>
+              <v-btn color="red" class="mb-6" @click="() => deleteActivity(a)"
+                >Supprimer</v-btn
+              >
+            </div>
             <v-select
               hide-details="auto"
               label="Type"
@@ -137,6 +142,26 @@
         }
       },
       methods: {
+        async deleteActivity(activity) {
+          if (!confirm("Etes vous sur de vouloir supprimer cette activite?")) return
+          const res = await this.$fetch("/api/activity/" + activity.id, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" }
+          })
+          if (res.status !== 200) {
+            // HANDLE ERRORS
+            const text = await res.text()
+            console.error(res)
+            console.error(text)
+            this.snackbarText = text
+            this.snackbarColor = "red"
+            this.snackbarEnabled = true
+            return
+          }
+          this.selectedCv.activities = this.selectedCv.activities.filter(
+            a => a.id !== activity.id
+          )
+        },
         async deleteCv() {
           if (!confirm("Etes vous sur de vouloir supprimer ce CV?")) return
           const res = await this.$fetch("/api/cv/" + this.selectedCv.id, {
