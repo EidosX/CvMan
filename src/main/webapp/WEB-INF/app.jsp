@@ -30,7 +30,9 @@
             :on-edit-user="() => { $router.push('/edit-user/' + user.id) }"
             :on-logout="() => { $router.push('/'); user = null; }"
           ></navbar>
-          <router-view></router-view>
+          <router-view
+            :key="$route.fullPath.includes('edit-user') && $route.fullPath"
+          ></router-view>
         </div>
       </v-app>
     </template>
