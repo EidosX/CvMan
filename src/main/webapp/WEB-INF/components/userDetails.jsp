@@ -61,6 +61,11 @@
                 {{ formatActivityType(a.type) }}
               </p>
               <p style="color: grey">{{ a.description }}</p>
+              <p>
+                <a v-if="a.website" :href="a.website" class="text-blue-500">
+                  {{ a.website }}
+                </a>
+              </p>
             </v-expansion-panel-text>
           </v-expansion-panel>
         </v-expansion-panels>

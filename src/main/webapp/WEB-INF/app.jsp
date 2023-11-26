@@ -27,7 +27,7 @@
         <div class="flex w-full">
           <navbar
             :on-open-auth="() => openAuth('login')"
-            :on-edit-user="() => {}"
+            :on-edit-user="() => { $router.push('/edit-user/' + user.id) }"
             :on-logout="() => { $router.push('/'); user = null; }"
           ></navbar>
           <router-view></router-view>
@@ -100,6 +100,8 @@
   <%@ include file="/WEB-INF/pages/home.jsp"%>
   <!---->
   <%@ include file="/WEB-INF/pages/users.jsp"%>
+  <!---->
+  <%@ include file="/WEB-INF/pages/edit-user.jsp"%>
 
   <script>
     const router = VueRouter.createRouter({
