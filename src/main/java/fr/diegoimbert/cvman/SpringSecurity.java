@@ -66,7 +66,7 @@ public class SpringSecurity {
                 .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST,
                     "/api/auth/signup"))
                 .permitAll()
-                .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/user/**")).permitAll()
+                .requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/user/**")).permitAll()
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/api/**")).authenticated().anyRequest().permitAll();
           } catch (Exception e) {
             e.printStackTrace();
