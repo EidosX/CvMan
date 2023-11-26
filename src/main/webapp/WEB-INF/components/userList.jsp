@@ -80,15 +80,17 @@
                 copy.searchBy
             )
             if (res.status !== 200) {
+              console.error("error")
               console.error(res)
               return
             }
             const json = await res.json()
+            console.log(json)
 
             // Simulate delay
             await new Promise(resolve => setTimeout(resolve, 500))
 
-            done?.(res.last ? "empty" : "ok")
+            done?.(json.last ? "empty" : "ok")
 
             if (!fieldsEquals(copy, this, fields)) return
 
