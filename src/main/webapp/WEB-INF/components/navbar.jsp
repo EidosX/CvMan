@@ -6,7 +6,10 @@
 -->
 
 <template type="text/x-template" id="navbar-template">
-  <div class="w-28 shrink-0 bg-slate-950 h-screen text-white flex flex-col">
+  <div
+    class="w-28 shrink-0 bg-slate-950 h-screen text-white flex flex-col"
+    style="height: 100dvh"
+  >
     <div
       v-for="(item, index) in items"
       class="aspect-square flex flex-col align-center justify-center cursor-pointer last:mt-auto"
