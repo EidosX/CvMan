@@ -57,7 +57,6 @@ public class User {
   private String email;
 
   @Basic
-  @URL
   private String website;
 
   @Basic

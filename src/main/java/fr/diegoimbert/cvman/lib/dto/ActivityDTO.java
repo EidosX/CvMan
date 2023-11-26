@@ -23,4 +23,11 @@ public class ActivityDTO {
   private String title;
   private String description;
   private String website;
+
+  @Component
+  @Data
+  @NoArgsConstructor
+  public static class Create {
+    private Long cvId;
+  }
 }

@@ -60,7 +60,12 @@
         <form>
           <v-text-field label="Nom du CV" v-model="selectedCv.name"></v-text-field>
         </form>
-        <h2 class="font-bold text-2xl pb-6">Liste des activit&eacute;s</h2>
+        <div class="flex w-full">
+          <h2 class="font-bold text-2xl pb-6">Liste des activit&eacute;s</h2>
+          <v-btn color="purple" class="ml-auto" @click="createActivity"
+            >Nouvelle activit&eacute;</v-btn
+          >
+        </div>
         <div class="flex flex-col gap-8">
           <v-card v-for="a in selectedCv.activities">
             <div class="flex gap-3">
@@ -153,9 +158,18 @@
             body: JSON.stringify({ userId })
           })
           const json = await res.json()
-          console.log(json)
           this.details.cvs.push(json)
           this.selectedCv = json
+        },
+        async createActivity() {
+          const cvId = this.selectedCv.id
+          const res = await this.$fetch("/api/activity", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ cvId })
+          })
+          const json = await res.json()
+          this.selectedCv.activities = [json, ...this.selectedCv.activities]
         },
         async deleteActivity(activity) {
           if (!confirm("Etes vous sur de vouloir supprimer cette activite?")) return

@@ -1,7 +1,5 @@
 package fr.diegoimbert.cvman.lib.model;
 
-import org.hibernate.validator.constraints.URL;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Basic;
@@ -54,7 +52,6 @@ public class Activity {
   private String description;
 
   @Basic
-  @URL
   private String website;
 
   public static enum Type {
