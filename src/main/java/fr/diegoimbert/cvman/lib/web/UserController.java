@@ -3,12 +3,14 @@ package fr.diegoimbert.cvman.lib.web;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import fr.diegoimbert.cvman.lib.auth.JwtUtil;
 import fr.diegoimbert.cvman.lib.dao.ActivityRepository;
 import fr.diegoimbert.cvman.lib.dao.CVRepository;
 import fr.diegoimbert.cvman.lib.dao.UserRepository;
 import fr.diegoimbert.cvman.lib.dto.UserDTO;
 import fr.diegoimbert.cvman.lib.model.CV;
 import fr.diegoimbert.cvman.lib.model.User;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.Optional;
 import org.modelmapper.ModelMapper;
@@ -38,6 +40,9 @@ public class UserController {
   @Autowired
   private PasswordEncoder encoder;
 
+  @Autowired
+  private JwtUtil jwtUtil;
+
   @GetMapping("/list")
   public Page<UserDTO.ListOut> list(
       @RequestParam int pageNumber, @RequestParam Optional<String> searchBar,
@@ -64,16 +69,26 @@ public class UserController {
   }
 
   @PostMapping("/edit-password/{id}")
-  public void editPassword(@PathVariable Long id, @RequestBody UserDTO.EditPassword dto) {
+  public void editPassword(
+      @PathVariable Long id,
+      @RequestBody UserDTO.EditPassword dto,
+      HttpServletRequest req) {
     var user = userRepository.findById(id).get();
+    var tokenEmail = jwtUtil.getEmail(jwtUtil.resolveClaims(req));
+    if (!user.getEmail().equals(tokenEmail)) {
+      throw new RuntimeException("Unauthorized");
+    }
     user.setHashedPassword(encoder.encode(dto.getRawPassword()));
     userRepository.save(user);
   }
 
   @PostMapping("/edit")
-  public void edit(@RequestBody UserDTO.Edit dto) {
-    System.out.println(dto);
+  public void edit(@RequestBody UserDTO.Edit dto, HttpServletRequest req) {
     var user = userRepository.findById(dto.getId()).get();
+    var tokenEmail = jwtUtil.getEmail(jwtUtil.resolveClaims(req));
+    if (!user.getEmail().equals(tokenEmail)) {
+      throw new RuntimeException("Unauthorized");
+    }
     if (dto.getAvatar() != null) {
       user.setAvatar(dto.getAvatar());
     }

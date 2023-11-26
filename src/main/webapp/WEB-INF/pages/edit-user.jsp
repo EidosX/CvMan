@@ -37,7 +37,6 @@
         <v-text-field label="Nom de famille" v-model="details.lastName"></v-text-field>
         <v-textarea label="Description" v-model="details.description"></v-textarea>
         <v-text-field label="Site web" v-model="details.website"></v-text-field>
-        <v-text-field label="Adresse email" v-model="details.email"></v-text-field>
       </form>
     </div>
     <div class="w-full">
