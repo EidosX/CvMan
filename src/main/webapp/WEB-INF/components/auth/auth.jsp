@@ -40,9 +40,10 @@
           </p>
         </div>
 
-        <div
+        <form
           class="flex flex-col items-center justify-center"
           style="width: 30rem; height: 36rem"
+          @submit.prevent="mode == 'login' ? login() : mode == 'signup' ? signup() : 0"
         >
           <div class="w-full px-8 flex flex-col gap-2">
             <!-- Right panel -->
@@ -52,12 +53,14 @@
                 label="Pr&eacute;nom"
                 variant="outlined"
                 v-model="firstName"
+                name="firstName"
               ></v-text-field>
               <v-text-field
                 hint="Entrez votre nom de famille"
                 label="Nom"
                 variant="outlined"
                 v-model="lastName"
+                name="lastName"
               ></v-text-field>
             </div>
             <v-text-field
@@ -67,6 +70,7 @@
               prepend-inner-icon="mdi-email"
               variant="outlined"
               v-model="email"
+              name="email"
             ></v-text-field>
             <v-text-field
               v-if="mode == 'signup'"
@@ -88,6 +92,7 @@
               @click:append-inner="showPassword = !showPassword"
               variant="outlined"
               v-model="password"
+              name="password"
             ></v-text-field>
             <v-text-field
               v-if="mode == 'signup'"
@@ -105,7 +110,7 @@
             v-if="!waiting"
             append-icon="$vuetify"
             class="bottom-8 absolute"
-            @click="mode == 'login' ? login() : mode == 'signup' ? signup() : 0"
+            type="submit"
           >
             <template v-if="mode == 'login'">Se connecter</template>
             <template v-if="mode == 'signup'">S'inscrire</template>
@@ -115,7 +120,7 @@
             v-if="waiting"
             indeterminate
           ></v-progress-circular>
-        </div>
+        </form>
       </div>
     </v-card>
   </v-overlay>

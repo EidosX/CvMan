@@ -26,7 +26,7 @@
         <auth ref="auth" :on-user="(u) => user = u"></auth>
         <div class="flex w-full">
           <navbar
-            :on-open-auth="openAuth"
+            :on-open-auth="() => openAuth('login')"
             :on-edit-user="() => {}"
             :on-logout="() => { $router.push('/'); user = null; }"
           ></navbar>
@@ -53,8 +53,9 @@
           user: userRef
         }),
         methods: {
-          openAuth() {
+          openAuth(mode = "login") {
             this.$refs.auth.open()
+            this.$refs.auth.mode = mode
           }
         }
       })
