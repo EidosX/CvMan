@@ -48,10 +48,12 @@
         v-model="selectedCv"
         item-title="name"
         item-value="id"
+        hide-details="auto"
         return-object
       ></v-select>
       <br />
       <template v-if="selectedCv">
+        <v-btn color="red" class="mb-6" @click="deleteCv">Supprimer le CV</v-btn>
         <form>
           <v-text-field label="Nom du CV" v-model="selectedCv.name"></v-text-field>
         </form>
@@ -135,6 +137,26 @@
         }
       },
       methods: {
+        async deleteCv() {
+          if (!confirm("Etes vous sur de vouloir supprimer ce CV?")) return
+          const res = await this.$fetch("/api/cv/" + this.selectedCv.id, {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" }
+          })
+          if (res.status !== 200) {
+            // HANDLE ERRORS
+            const text = await res.text()
+            console.error(res)
+            console.error(text)
+            this.snackbarText = text
+            this.snackbarColor = "red"
+            this.snackbarEnabled = true
+            return
+          }
+
+          this.details.cvs = this.details.cvs.filter(c => c.id !== this.selectedCv.id)
+          this.selectedCv = null
+        },
         async onSubmit() {
           const res = await this.$fetch("/api/user/edit", {
             method: "POST",
