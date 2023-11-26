@@ -183,8 +183,8 @@
               this.snackbarColor = "red"
               return
             }
-            const { token, firstName, lastName } = await res.json()
-            this.onUser({ email, token, firstName, lastName })
+            const { id, token, firstName, lastName } = await res.json()
+            this.onUser({ id, email, token, firstName, lastName })
             this.overlay = false
             this.snackbarText = "Bienvenue, " + firstName
             this.snackbarColor = "green"

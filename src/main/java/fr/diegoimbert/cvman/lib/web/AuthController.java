@@ -53,7 +53,7 @@ public class AuthController {
       var email = authentication.getName();
       var user = ur.findByEmail(email).orElseThrow();
       var token = jwtUtil.createToken(user);
-      var loginRes = new AuthDTO.Login.Res(email,
+      var loginRes = new AuthDTO.Login.Res(user.getId(), email,
           user.getFirstName(), user.getLastName(), token);
 
       return ResponseEntity.ok(loginRes);

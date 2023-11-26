@@ -23,6 +23,7 @@ public class AuthDTO {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Res {
+      private Long id;
       private String email;
       private String firstName;
       private String lastName;
