@@ -21,4 +21,11 @@ public class CvDTO {
   private Long id;
   private String name;
   private List<ActivityDTO> activities;
+
+  @Component
+  @Data
+  @NoArgsConstructor
+  public static class Create {
+    private Long userId;
+  }
 }

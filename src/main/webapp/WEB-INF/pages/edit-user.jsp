@@ -41,7 +41,10 @@
       </form>
     </div>
     <div class="w-full">
-      <h2 class="font-bold text-2xl pb-4">Liste des CV</h2>
+      <div class="flex w-full">
+        <h2 class="font-bold text-2xl pb-4">Liste des CV</h2>
+        <v-btn color="purple" class="ml-auto" @click="createCv">Nouveau CV</v-btn>
+      </div>
       <v-select
         label="Selectionner un CV"
         :items="details.cvs"
@@ -142,6 +145,18 @@
         }
       },
       methods: {
+        async createCv() {
+          const userId = this.$route.params.userId
+          const res = await this.$fetch("/api/cv", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ userId })
+          })
+          const json = await res.json()
+          console.log(json)
+          this.details.cvs.push(json)
+          this.selectedCv = json
+        },
         async deleteActivity(activity) {
           if (!confirm("Etes vous sur de vouloir supprimer cette activite?")) return
           const res = await this.$fetch("/api/activity/" + activity.id, {
