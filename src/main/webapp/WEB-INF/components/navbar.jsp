@@ -57,17 +57,14 @@
               $router.push("/")
             }
           },
-          ...(($user.value && [
-            {
-              id: "userlist",
-              icon: "mdi-file-account",
-              name: "Utilisateurs",
-              onClick() {
-                $router.push("/users")
-              }
+          {
+            id: "userlist",
+            icon: "mdi-file-account",
+            name: "Utilisateurs",
+            onClick() {
+              $router.push("/users")
             }
-          ]) ||
-            []),
+          },
           {
             id: "account",
             icon: "mdi-account",
