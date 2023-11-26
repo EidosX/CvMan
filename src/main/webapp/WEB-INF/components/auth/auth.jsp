@@ -196,6 +196,13 @@
         async signup() {
           try {
             this.waiting = true
+
+            if (this.password !== this.passwordConfirmation) {
+              this.snackbarText = "Les mots de passes ne correspondent pas"
+              this.snackbarColor = "red"
+              this.snackbarEnabled = true
+              throw ""
+            }
             const { email, firstName, lastName, password: rawPassword, birthday } = this
             const res = await this.$fetch("/api/auth/signup", {
               method: "POST",
